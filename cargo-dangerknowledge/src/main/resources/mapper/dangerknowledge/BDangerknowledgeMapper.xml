@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.dangerknowledge.mapper.BDangerknowledgeMapper">
+    
+    <resultMap type="BDangerknowledge" id="BDangerknowledgeResult">
+        <result property="dangerId"    column="danger_id"    />
+        <result property="dangerName"    column="danger_name"    />
+        <result property="dangerType"    column="danger_type"    />
+        <result property="dangerNum"    column="danger_num"    />
+        <result property="dangerAction"    column="danger_action"    />
+        <result property="checkWay"    column="check_way"    />
+        <result property="securityNotes"    column="security_notes"    />
+        <result property="dangerImage"    column="danger_image"    />
+    </resultMap>
+
+    <sql id="selectBDangerknowledgeVo">
+        select danger_id, danger_name, danger_type, danger_num, danger_action, check_way, security_notes, danger_image from b_dangerknowledge
+    </sql>
+
+    <select id="selectBDangerknowledgeList" parameterType="BDangerknowledge" resultMap="BDangerknowledgeResult">
+        <include refid="selectBDangerknowledgeVo"/>
+        <where>  
+            <if test="dangerName != null  and dangerName != ''"> and danger_name like concat('%', #{dangerName}, '%')</if>
+            <if test="dangerType != null  and dangerType != ''"> and danger_type = #{dangerType}</if>
+            <if test="dangerNum != null "> and danger_num = #{dangerNum}</if>
+            <if test="dangerAction != null  and dangerAction != ''"> and danger_action = #{dangerAction}</if>
+            <if test="checkWay != null  and checkWay != ''"> and check_way = #{checkWay}</if>
+            <if test="securityNotes != null  and securityNotes != ''"> and security_notes = #{securityNotes}</if>
+            <if test="dangerImage != null  and dangerImage != ''"> and danger_image = #{dangerImage}</if>
+        </where>
+    </select>
+    
+    <select id="selectBDangerknowledgeByDangerId" parameterType="Long" resultMap="BDangerknowledgeResult">
+        <include refid="selectBDangerknowledgeVo"/>
+        where danger_id = #{dangerId}
+    </select>
+        
+    <insert id="insertBDangerknowledge" parameterType="BDangerknowledge">
+        insert into b_dangerknowledge
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dangerId != null">danger_id,</if>
+            <if test="dangerName != null">danger_name,</if>
+            <if test="dangerType != null">danger_type,</if>
+            <if test="dangerNum != null">danger_num,</if>
+            <if test="dangerAction != null">danger_action,</if>
+            <if test="checkWay != null">check_way,</if>
+            <if test="securityNotes != null">security_notes,</if>
+            <if test="dangerImage != null">danger_image,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="dangerId != null">#{dangerId},</if>
+            <if test="dangerName != null">#{dangerName},</if>
+            <if test="dangerType != null">#{dangerType},</if>
+            <if test="dangerNum != null">#{dangerNum},</if>
+            <if test="dangerAction != null">#{dangerAction},</if>
+            <if test="checkWay != null">#{checkWay},</if>
+            <if test="securityNotes != null">#{securityNotes},</if>
+            <if test="dangerImage != null">#{dangerImage},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBDangerknowledge" parameterType="BDangerknowledge">
+        update b_dangerknowledge
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="dangerName != null">danger_name = #{dangerName},</if>
+            <if test="dangerType != null">danger_type = #{dangerType},</if>
+            <if test="dangerNum != null">danger_num = #{dangerNum},</if>
+            <if test="dangerAction != null">danger_action = #{dangerAction},</if>
+            <if test="checkWay != null">check_way = #{checkWay},</if>
+            <if test="securityNotes != null">security_notes = #{securityNotes},</if>
+            <if test="dangerImage != null">danger_image = #{dangerImage},</if>
+        </trim>
+        where danger_id = #{dangerId}
+    </update>
+
+    <delete id="deleteBDangerknowledgeByDangerId" parameterType="Long">
+        delete from b_dangerknowledge where danger_id = #{dangerId}
+    </delete>
+
+    <delete id="deleteBDangerknowledgeByDangerIds" parameterType="String">
+        delete from b_dangerknowledge where danger_id in 
+        <foreach item="dangerId" collection="array" open="(" separator="," close=")">
+            #{dangerId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.spacenote.mapper.BSpacenoteMapper">
+    
+    <resultMap type="BSpacenote" id="BSpacenoteResult">
+        <result property="spaceutilizationrateId"    column="spaceutilizationrate_id"    />
+        <result property="scheduleId"    column="schedule_id"    />
+        <result property="containerId"    column="container_id"    />
+        <result property="rate"    column="rate"    />
+        <result property="createdate"    column="createdate"    />
+    </resultMap>
+
+    <sql id="selectBSpacenoteVo">
+        select spaceutilizationrate_id, schedule_id, container_id, rate, createdate from b_spacenote
+    </sql>
+
+    <select id="selectBSpacenoteList" parameterType="BSpacenote" resultMap="BSpacenoteResult">
+        <include refid="selectBSpacenoteVo"/>
+        <where>  
+            <if test="scheduleId != null "> and schedule_id = #{scheduleId}</if>
+            <if test="containerId != null "> and container_id = #{containerId}</if>
+            <if test="rate != null  and rate != ''"> and rate = #{rate}</if>
+            <if test="createdate != null "> and createdate = #{createdate}</if>
+        </where>
+    </select>
+    
+    <select id="selectBSpacenoteBySpaceutilizationrateId" parameterType="Long" resultMap="BSpacenoteResult">
+        <include refid="selectBSpacenoteVo"/>
+        where spaceutilizationrate_id = #{spaceutilizationrateId}
+    </select>
+        
+    <insert id="insertBSpacenote" parameterType="BSpacenote" useGeneratedKeys="true" keyProperty="spaceutilizationrateId">
+        insert into b_spacenote
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="scheduleId != null">schedule_id,</if>
+            <if test="containerId != null">container_id,</if>
+            <if test="rate != null">rate,</if>
+            <if test="createdate != null">createdate,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="scheduleId != null">#{scheduleId},</if>
+            <if test="containerId != null">#{containerId},</if>
+            <if test="rate != null">#{rate},</if>
+            <if test="createdate != null">#{createdate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBSpacenote" parameterType="BSpacenote">
+        update b_spacenote
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="scheduleId != null">schedule_id = #{scheduleId},</if>
+            <if test="containerId != null">container_id = #{containerId},</if>
+            <if test="rate != null">rate = #{rate},</if>
+            <if test="createdate != null">createdate = #{createdate},</if>
+        </trim>
+        where spaceutilizationrate_id = #{spaceutilizationrateId}
+    </update>
+
+    <delete id="deleteBSpacenoteBySpaceutilizationrateId" parameterType="Long">
+        delete from b_spacenote where spaceutilizationrate_id = #{spaceutilizationrateId}
+    </delete>
+
+    <delete id="deleteBSpacenoteBySpaceutilizationrateIds" parameterType="String">
+        delete from b_spacenote where spaceutilizationrate_id in 
+        <foreach item="spaceutilizationrateId" collection="array" open="(" separator="," close=")">
+            #{spaceutilizationrateId}
+        </foreach>
+    </delete>
+</mapper>

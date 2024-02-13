@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.vehicle.mapper.BVehicleMapper">
+    
+    <resultMap type="BVehicle" id="BVehicleResult">
+        <result property="vehicleId"    column="vehicle_id"    />
+        <result property="vehicleType"    column="vehicle_type"    />
+        <result property="vehicleStatus"    column="vehicle_status"    />
+        <result property="vehicleImage"    column="vehicle_image"    />
+    </resultMap>
+
+    <sql id="selectBVehicleVo">
+        select vehicle_id, vehicle_type, vehicle_status, vehicle_image from b_vehicle
+    </sql>
+
+    <select id="selectBVehicleList" parameterType="BVehicle" resultMap="BVehicleResult">
+        <include refid="selectBVehicleVo"/>
+        <where>  
+            <if test="vehicleType != null  and vehicleType != ''"> and vehicle_type = #{vehicleType}</if>
+            <if test="vehicleStatus != null  and vehicleStatus != ''"> and vehicle_status = #{vehicleStatus}</if>
+            <if test="vehicleImage != null  and vehicleImage != ''"> and vehicle_image = #{vehicleImage}</if>
+        </where>
+    </select>
+    
+    <select id="selectBVehicleByVehicleId" parameterType="String" resultMap="BVehicleResult">
+        <include refid="selectBVehicleVo"/>
+        where vehicle_id = #{vehicleId}
+    </select>
+        
+    <insert id="insertBVehicle" parameterType="BVehicle">
+        insert into b_vehicle
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="vehicleId != null">vehicle_id,</if>
+            <if test="vehicleType != null">vehicle_type,</if>
+            <if test="vehicleStatus != null">vehicle_status,</if>
+            <if test="vehicleImage != null">vehicle_image,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="vehicleId != null">#{vehicleId},</if>
+            <if test="vehicleType != null">#{vehicleType},</if>
+            <if test="vehicleStatus != null">#{vehicleStatus},</if>
+            <if test="vehicleImage != null">#{vehicleImage},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBVehicle" parameterType="BVehicle">
+        update b_vehicle
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vehicleType != null">vehicle_type = #{vehicleType},</if>
+            <if test="vehicleStatus != null">vehicle_status = #{vehicleStatus},</if>
+            <if test="vehicleImage != null">vehicle_image = #{vehicleImage},</if>
+        </trim>
+        where vehicle_id = #{vehicleId}
+    </update>
+
+    <delete id="deleteBVehicleByVehicleId" parameterType="String">
+        delete from b_vehicle where vehicle_id = #{vehicleId}
+    </delete>
+
+    <delete id="deleteBVehicleByVehicleIds" parameterType="String">
+        delete from b_vehicle where vehicle_id in 
+        <foreach item="vehicleId" collection="array" open="(" separator="," close=")">
+            #{vehicleId}
+        </foreach>
+    </delete>
+</mapper>

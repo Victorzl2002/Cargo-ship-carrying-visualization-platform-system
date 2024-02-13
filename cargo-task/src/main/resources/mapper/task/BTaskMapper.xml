@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.task.mapper.BTaskMapper">
+    
+    <resultMap type="BTask" id="BTaskResult">
+        <result property="taskId"    column="task_id"    />
+        <result property="truckId"    column="truck_id"    />
+        <result property="containerId"    column="container_id"    />
+        <result property="taskStatus"    column="task_status"    />
+        <result property="taskType"    column="task_type"    />
+        <result property="taskStart"    column="task_start"    />
+        <result property="taskEnd"    column="task_end"    />
+        <result property="taskTime"    column="task_time"    />
+        <result property="taskNotes"    column="task_notes"    />
+    </resultMap>
+
+    <sql id="selectBTaskVo">
+        select task_id, truck_id, container_id, task_status, task_type, task_start, task_end, task_time, task_notes from b_task
+    </sql>
+
+    <select id="selectBTaskList" parameterType="BTask" resultMap="BTaskResult">
+        <include refid="selectBTaskVo"/>
+        <where>  
+            <if test="truckId != null  and truckId != ''"> and truck_id = #{truckId}</if>
+            <if test="containerId != null "> and container_id = #{containerId}</if>
+            <if test="taskStatus != null  and taskStatus != ''"> and task_status = #{taskStatus}</if>
+            <if test="taskType != null  and taskType != ''"> and task_type = #{taskType}</if>
+            <if test="taskStart != null  and taskStart != ''"> and task_start = #{taskStart}</if>
+            <if test="taskEnd != null  and taskEnd != ''"> and task_end = #{taskEnd}</if>
+            <if test="taskTime != null "> and task_time = #{taskTime}</if>
+            <if test="taskNotes != null  and taskNotes != ''"> and task_notes = #{taskNotes}</if>
+        </where>
+    </select>
+    
+    <select id="selectBTaskByTaskId" parameterType="Long" resultMap="BTaskResult">
+        <include refid="selectBTaskVo"/>
+        where task_id = #{taskId}
+    </select>
+        
+    <insert id="insertBTask" parameterType="BTask" useGeneratedKeys="true" keyProperty="taskId">
+        insert into b_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="truckId != null">truck_id,</if>
+            <if test="containerId != null">container_id,</if>
+            <if test="taskStatus != null">task_status,</if>
+            <if test="taskType != null">task_type,</if>
+            <if test="taskStart != null">task_start,</if>
+            <if test="taskEnd != null">task_end,</if>
+            <if test="taskTime != null">task_time,</if>
+            <if test="taskNotes != null">task_notes,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="truckId != null">#{truckId},</if>
+            <if test="containerId != null">#{containerId},</if>
+            <if test="taskStatus != null">#{taskStatus},</if>
+            <if test="taskType != null">#{taskType},</if>
+            <if test="taskStart != null">#{taskStart},</if>
+            <if test="taskEnd != null">#{taskEnd},</if>
+            <if test="taskTime != null">#{taskTime},</if>
+            <if test="taskNotes != null">#{taskNotes},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBTask" parameterType="BTask">
+        update b_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="truckId != null">truck_id = #{truckId},</if>
+            <if test="containerId != null">container_id = #{containerId},</if>
+            <if test="taskStatus != null">task_status = #{taskStatus},</if>
+            <if test="taskType != null">task_type = #{taskType},</if>
+            <if test="taskStart != null">task_start = #{taskStart},</if>
+            <if test="taskEnd != null">task_end = #{taskEnd},</if>
+            <if test="taskTime != null">task_time = #{taskTime},</if>
+            <if test="taskNotes != null">task_notes = #{taskNotes},</if>
+        </trim>
+        where task_id = #{taskId}
+    </update>
+
+    <delete id="deleteBTaskByTaskId" parameterType="Long">
+        delete from b_task where task_id = #{taskId}
+    </delete>
+
+    <delete id="deleteBTaskByTaskIds" parameterType="String">
+        delete from b_task where task_id in 
+        <foreach item="taskId" collection="array" open="(" separator="," close=")">
+            #{taskId}
+        </foreach>
+    </delete>
+</mapper>

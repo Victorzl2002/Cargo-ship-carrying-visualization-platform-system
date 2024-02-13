@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.feedbook.mapper.BFeedbookMapper">
+    
+    <resultMap type="BFeedbook" id="BFeedbookResult">
+        <result property="feedId"    column="feed_id"    />
+        <result property="feedContent"    column="feed_content"    />
+        <result property="feedDate"    column="feed_date"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+
+    <sql id="selectBFeedbookVo">
+        select feed_id, feed_content, feed_date, user_id from b_feedbook
+    </sql>
+
+    <select id="selectBFeedbookList" parameterType="BFeedbook" resultMap="BFeedbookResult">
+        <include refid="selectBFeedbookVo"/>
+        <where>  
+            <if test="feedContent != null  and feedContent != ''"> and feed_content = #{feedContent}</if>
+            <if test="feedDate != null "> and feed_date = #{feedDate}</if>
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+        </where>
+    </select>
+    
+    <select id="selectBFeedbookByFeedId" parameterType="Long" resultMap="BFeedbookResult">
+        <include refid="selectBFeedbookVo"/>
+        where feed_id = #{feedId}
+    </select>
+        
+    <insert id="insertBFeedbook" parameterType="BFeedbook">
+        insert into b_feedbook
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="feedId != null">feed_id,</if>
+            <if test="feedContent != null">feed_content,</if>
+            <if test="feedDate != null">feed_date,</if>
+            <if test="userId != null">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="feedId != null">#{feedId},</if>
+            <if test="feedContent != null">#{feedContent},</if>
+            <if test="feedDate != null">#{feedDate},</if>
+            <if test="userId != null">#{userId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBFeedbook" parameterType="BFeedbook">
+        update b_feedbook
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="feedContent != null">feed_content = #{feedContent},</if>
+            <if test="feedDate != null">feed_date = #{feedDate},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+        </trim>
+        where feed_id = #{feedId}
+    </update>
+
+    <delete id="deleteBFeedbookByFeedId" parameterType="Long">
+        delete from b_feedbook where feed_id = #{feedId}
+    </delete>
+
+    <delete id="deleteBFeedbookByFeedIds" parameterType="String">
+        delete from b_feedbook where feed_id in 
+        <foreach item="feedId" collection="array" open="(" separator="," close=")">
+            #{feedId}
+        </foreach>
+    </delete>
+</mapper>

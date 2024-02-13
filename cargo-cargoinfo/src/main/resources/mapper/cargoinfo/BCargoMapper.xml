@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.cargoinfo.mapper.BCargoMapper">
+    
+    <resultMap type="BCargo" id="BCargoResult">
+        <result property="cargoId"    column="cargo_id"    />
+        <result property="cargoName"    column="cargo_name"    />
+        <result property="cargoType"    column="cargo_type"    />
+        <result property="cargoWeight"    column="cargo_weight"    />
+        <result property="cargoVolume"    column="cargo_volume"    />
+        <result property="cargoStatus"    column="cargo_status"    />
+        <result property="cargoImage"    column="cargo_image"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+
+    <sql id="selectBCargoVo">
+        select cargo_id, cargo_name, cargo_type, cargo_weight, cargo_volume, cargo_status, cargo_image, user_id from b_cargo
+    </sql>
+
+    <select id="selectBCargoList" parameterType="BCargo" resultMap="BCargoResult">
+        <include refid="selectBCargoVo"/>
+        <where>  
+            <if test="cargoName != null  and cargoName != ''"> and cargo_name like concat('%', #{cargoName}, '%')</if>
+            <if test="cargoType != null  and cargoType != ''"> and cargo_type = #{cargoType}</if>
+            <if test="cargoWeight != null "> and cargo_weight = #{cargoWeight}</if>
+            <if test="cargoVolume != null "> and cargo_volume = #{cargoVolume}</if>
+            <if test="cargoStatus != null  and cargoStatus != ''"> and cargo_status = #{cargoStatus}</if>
+            <if test="cargoImage != null  and cargoImage != ''"> and cargo_image = #{cargoImage}</if>
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+        </where>
+    </select>
+    
+    <select id="selectBCargoByCargoId" parameterType="Long" resultMap="BCargoResult">
+        <include refid="selectBCargoVo"/>
+        where cargo_id = #{cargoId}
+    </select>
+        
+    <insert id="insertBCargo" parameterType="BCargo" useGeneratedKeys="true" keyProperty="cargoId">
+        insert into b_cargo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cargoName != null">cargo_name,</if>
+            <if test="cargoType != null">cargo_type,</if>
+            <if test="cargoWeight != null">cargo_weight,</if>
+            <if test="cargoVolume != null">cargo_volume,</if>
+            <if test="cargoStatus != null">cargo_status,</if>
+            <if test="cargoImage != null">cargo_image,</if>
+            <if test="userId != null">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cargoName != null">#{cargoName},</if>
+            <if test="cargoType != null">#{cargoType},</if>
+            <if test="cargoWeight != null">#{cargoWeight},</if>
+            <if test="cargoVolume != null">#{cargoVolume},</if>
+            <if test="cargoStatus != null">#{cargoStatus},</if>
+            <if test="cargoImage != null">#{cargoImage},</if>
+            <if test="userId != null">#{userId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBCargo" parameterType="BCargo">
+        update b_cargo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cargoName != null">cargo_name = #{cargoName},</if>
+            <if test="cargoType != null">cargo_type = #{cargoType},</if>
+            <if test="cargoWeight != null">cargo_weight = #{cargoWeight},</if>
+            <if test="cargoVolume != null">cargo_volume = #{cargoVolume},</if>
+            <if test="cargoStatus != null">cargo_status = #{cargoStatus},</if>
+            <if test="cargoImage != null">cargo_image = #{cargoImage},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+        </trim>
+        where cargo_id = #{cargoId}
+    </update>
+
+    <delete id="deleteBCargoByCargoId" parameterType="Long">
+        delete from b_cargo where cargo_id = #{cargoId}
+    </delete>
+
+    <delete id="deleteBCargoByCargoIds" parameterType="String">
+        delete from b_cargo where cargo_id in 
+        <foreach item="cargoId" collection="array" open="(" separator="," close=")">
+            #{cargoId}
+        </foreach>
+    </delete>
+</mapper>

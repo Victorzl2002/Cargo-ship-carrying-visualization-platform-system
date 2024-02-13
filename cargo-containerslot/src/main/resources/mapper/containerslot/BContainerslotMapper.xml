@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.containerslot.mapper.BContainerslotMapper">
+    
+    <resultMap type="BContainerslot" id="BContainerslotResult">
+        <result property="slotId"    column="slot_id"    />
+        <result property="shipId"    column="ship_id"    />
+        <result property="rNumber"    column="r_number"    />
+        <result property="tierNumber"    column="tier_number"    />
+        <result property="cNumber"    column="c_number"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectBContainerslotVo">
+        select slot_id, ship_id, r_number, tier_number, c_number, status from b_containerslot
+    </sql>
+
+    <select id="selectBContainerslotList" parameterType="BContainerslot" resultMap="BContainerslotResult">
+        <include refid="selectBContainerslotVo"/>
+        <where>  
+            <if test="shipId != null "> and ship_id = #{shipId}</if>
+            <if test="rNumber != null "> and r_number = #{rNumber}</if>
+            <if test="tierNumber != null "> and tier_number = #{tierNumber}</if>
+            <if test="cNumber != null "> and c_number = #{cNumber}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectBContainerslotBySlotId" parameterType="Long" resultMap="BContainerslotResult">
+        <include refid="selectBContainerslotVo"/>
+        where slot_id = #{slotId}
+    </select>
+        
+    <insert id="insertBContainerslot" parameterType="BContainerslot" useGeneratedKeys="true" keyProperty="slotId">
+        insert into b_containerslot
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="shipId != null">ship_id,</if>
+            <if test="rNumber != null">r_number,</if>
+            <if test="tierNumber != null">tier_number,</if>
+            <if test="cNumber != null">c_number,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="shipId != null">#{shipId},</if>
+            <if test="rNumber != null">#{rNumber},</if>
+            <if test="tierNumber != null">#{tierNumber},</if>
+            <if test="cNumber != null">#{cNumber},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBContainerslot" parameterType="BContainerslot">
+        update b_containerslot
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="shipId != null">ship_id = #{shipId},</if>
+            <if test="rNumber != null">r_number = #{rNumber},</if>
+            <if test="tierNumber != null">tier_number = #{tierNumber},</if>
+            <if test="cNumber != null">c_number = #{cNumber},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where slot_id = #{slotId}
+    </update>
+
+    <delete id="deleteBContainerslotBySlotId" parameterType="Long">
+        delete from b_containerslot where slot_id = #{slotId}
+    </delete>
+
+    <delete id="deleteBContainerslotBySlotIds" parameterType="String">
+        delete from b_containerslot where slot_id in 
+        <foreach item="slotId" collection="array" open="(" separator="," close=")">
+            #{slotId}
+        </foreach>
+    </delete>
+</mapper>

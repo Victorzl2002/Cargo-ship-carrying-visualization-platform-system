@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.shipcompany.mapper.BShipCompaniesMapper">
+    
+    <resultMap type="BShipCompanies" id="BShipCompaniesResult">
+        <result property="companyId"    column="company_id"    />
+        <result property="conpanyName"    column="conpany_name"    />
+        <result property="companyAddress"    column="company_address"    />
+        <result property="companyPhone"    column="company_phone"    />
+        <result property="companyEmail"    column="company_email"    />
+        <result property="contactPerson"    column="contact_person"    />
+        <result property="contactEmail"    column="contact_email"    />
+        <result property="vesselsManaged"    column="vessels_managed"    />
+        <result property="companyDescription"    column="company_description"    />
+    </resultMap>
+
+    <sql id="selectBShipCompaniesVo">
+        select company_id, conpany_name, company_address, company_phone, company_email, contact_person, contact_email, vessels_managed, company_description from b_ship_companies
+    </sql>
+
+    <select id="selectBShipCompaniesList" parameterType="BShipCompanies" resultMap="BShipCompaniesResult">
+        <include refid="selectBShipCompaniesVo"/>
+        <where>  
+            <if test="conpanyName != null  and conpanyName != ''"> and conpany_name like concat('%', #{conpanyName}, '%')</if>
+            <if test="companyAddress != null  and companyAddress != ''"> and company_address = #{companyAddress}</if>
+            <if test="companyPhone != null  and companyPhone != ''"> and company_phone = #{companyPhone}</if>
+            <if test="companyEmail != null  and companyEmail != ''"> and company_email = #{companyEmail}</if>
+            <if test="contactPerson != null  and contactPerson != ''"> and contact_person = #{contactPerson}</if>
+            <if test="contactEmail != null  and contactEmail != ''"> and contact_email = #{contactEmail}</if>
+            <if test="vesselsManaged != null "> and vessels_managed = #{vesselsManaged}</if>
+            <if test="companyDescription != null  and companyDescription != ''"> and company_description = #{companyDescription}</if>
+        </where>
+    </select>
+    
+    <select id="selectBShipCompaniesByCompanyId" parameterType="Long" resultMap="BShipCompaniesResult">
+        <include refid="selectBShipCompaniesVo"/>
+        where company_id = #{companyId}
+    </select>
+        
+    <insert id="insertBShipCompanies" parameterType="BShipCompanies" useGeneratedKeys="true" keyProperty="companyId">
+        insert into b_ship_companies
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="conpanyName != null">conpany_name,</if>
+            <if test="companyAddress != null">company_address,</if>
+            <if test="companyPhone != null">company_phone,</if>
+            <if test="companyEmail != null">company_email,</if>
+            <if test="contactPerson != null">contact_person,</if>
+            <if test="contactEmail != null">contact_email,</if>
+            <if test="vesselsManaged != null">vessels_managed,</if>
+            <if test="companyDescription != null">company_description,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="conpanyName != null">#{conpanyName},</if>
+            <if test="companyAddress != null">#{companyAddress},</if>
+            <if test="companyPhone != null">#{companyPhone},</if>
+            <if test="companyEmail != null">#{companyEmail},</if>
+            <if test="contactPerson != null">#{contactPerson},</if>
+            <if test="contactEmail != null">#{contactEmail},</if>
+            <if test="vesselsManaged != null">#{vesselsManaged},</if>
+            <if test="companyDescription != null">#{companyDescription},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBShipCompanies" parameterType="BShipCompanies">
+        update b_ship_companies
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="conpanyName != null">conpany_name = #{conpanyName},</if>
+            <if test="companyAddress != null">company_address = #{companyAddress},</if>
+            <if test="companyPhone != null">company_phone = #{companyPhone},</if>
+            <if test="companyEmail != null">company_email = #{companyEmail},</if>
+            <if test="contactPerson != null">contact_person = #{contactPerson},</if>
+            <if test="contactEmail != null">contact_email = #{contactEmail},</if>
+            <if test="vesselsManaged != null">vessels_managed = #{vesselsManaged},</if>
+            <if test="companyDescription != null">company_description = #{companyDescription},</if>
+        </trim>
+        where company_id = #{companyId}
+    </update>
+
+    <delete id="deleteBShipCompaniesByCompanyId" parameterType="Long">
+        delete from b_ship_companies where company_id = #{companyId}
+    </delete>
+
+    <delete id="deleteBShipCompaniesByCompanyIds" parameterType="String">
+        delete from b_ship_companies where company_id in 
+        <foreach item="companyId" collection="array" open="(" separator="," close=")">
+            #{companyId}
+        </foreach>
+    </delete>
+</mapper>

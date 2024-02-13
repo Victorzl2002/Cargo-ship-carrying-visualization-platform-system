@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.port.mapper.BPortMapper">
+    
+    <resultMap type="BPort" id="BPortResult">
+        <result property="portId"    column="port_id"    />
+        <result property="portName"    column="port_name"    />
+        <result property="portLocation"    column="port_location"    />
+        <result property="portFacilities"    column="port_facilities"    />
+        <result property="portContact"    column="port_contact"    />
+        <result property="portImage"    column="port_image"    />
+    </resultMap>
+
+    <sql id="selectBPortVo">
+        select port_id, port_name, port_location, port_facilities, port_contact, port_image from b_port
+    </sql>
+
+    <select id="selectBPortList" parameterType="BPort" resultMap="BPortResult">
+        <include refid="selectBPortVo"/>
+        <where>  
+            <if test="portName != null  and portName != ''"> and port_name like concat('%', #{portName}, '%')</if>
+            <if test="portLocation != null  and portLocation != ''"> and port_location = #{portLocation}</if>
+            <if test="portFacilities != null  and portFacilities != ''"> and port_facilities = #{portFacilities}</if>
+            <if test="portContact != null  and portContact != ''"> and port_contact = #{portContact}</if>
+            <if test="portImage != null  and portImage != ''"> and port_image = #{portImage}</if>
+        </where>
+    </select>
+    
+    <select id="selectBPortByPortId" parameterType="Long" resultMap="BPortResult">
+        <include refid="selectBPortVo"/>
+        where port_id = #{portId}
+    </select>
+        
+    <insert id="insertBPort" parameterType="BPort">
+        insert into b_port
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="portId != null">port_id,</if>
+            <if test="portName != null">port_name,</if>
+            <if test="portLocation != null">port_location,</if>
+            <if test="portFacilities != null">port_facilities,</if>
+            <if test="portContact != null">port_contact,</if>
+            <if test="portImage != null">port_image,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="portId != null">#{portId},</if>
+            <if test="portName != null">#{portName},</if>
+            <if test="portLocation != null">#{portLocation},</if>
+            <if test="portFacilities != null">#{portFacilities},</if>
+            <if test="portContact != null">#{portContact},</if>
+            <if test="portImage != null">#{portImage},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBPort" parameterType="BPort">
+        update b_port
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="portName != null">port_name = #{portName},</if>
+            <if test="portLocation != null">port_location = #{portLocation},</if>
+            <if test="portFacilities != null">port_facilities = #{portFacilities},</if>
+            <if test="portContact != null">port_contact = #{portContact},</if>
+            <if test="portImage != null">port_image = #{portImage},</if>
+        </trim>
+        where port_id = #{portId}
+    </update>
+
+    <delete id="deleteBPortByPortId" parameterType="Long">
+        delete from b_port where port_id = #{portId}
+    </delete>
+
+    <delete id="deleteBPortByPortIds" parameterType="String">
+        delete from b_port where port_id in 
+        <foreach item="portId" collection="array" open="(" separator="," close=")">
+            #{portId}
+        </foreach>
+    </delete>
+</mapper>

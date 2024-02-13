@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.container.mapper.BContainerMapper">
+    
+    <resultMap type="BContainer" id="BContainerResult">
+        <result property="containerId"    column="container_id"    />
+        <result property="containerType"    column="container_type"    />
+        <result property="currentWeight"    column="current_weight"    />
+        <result property="currentVolume"    column="current_volume"    />
+        <result property="maxWeight"    column="max_weight"    />
+        <result property="maxVolume"    column="max_volume"    />
+        <result property="containerLocation"    column="container_location"    />
+        <result property="containerStatus"    column="container_status"    />
+        <result property="containerTemperature"    column="container_temperature"    />
+        <result property="containerHumidity"    column="container_humidity"    />
+        <result property="containerLongitude"    column="container_longitude"    />
+        <result property="containerLatitude"    column="container_latitude"    />
+        <result property="shipId"    column="ship_id"    />
+        <result property="cabinId"    column="cabin_id"    />
+        <result property="containerImage"    column="container_image"    />
+    </resultMap>
+
+    <sql id="selectBContainerVo">
+        select container_id, container_type, current_weight, current_volume, max_weight, max_volume, container_location,container_status, container_temperature, container_humidity, container_longitude, container_latitude, ship_id, cabin_id, container_image from b_container
+    </sql>
+
+    <select id="selectBContainerList" parameterType="BContainer" resultMap="BContainerResult">
+        <include refid="selectBContainerVo"/>
+        <where>  
+            <if test="containerType != null  and containerType != ''"> and container_type = #{containerType}</if>
+            <if test="currentWeight != null "> and current_weight = #{currentWeight}</if>
+            <if test="currentVolume != null "> and current_volume = #{currentVolume}</if>
+            <if test="maxWeight != null "> and max_weight = #{maxWeight}</if>
+            <if test="maxVolume != null "> and max_volume = #{maxVolume}</if>
+            <if test="containerLocation != null  and containerLocation != ''"> and container_location = #{containerLocation}</if>
+            <if test="containerStatus != null  and containerStatus != ''"> and container_status = #{containerStatus}</if>
+            <if test="containerTemperature != null "> and container_temperature = #{containerTemperature}</if>
+            <if test="containerHumidity != null "> and container_humidity = #{containerHumidity}</if>
+            <if test="containerLongitude != null  and containerLongitude != ''"> and container_longitude = #{containerLongitude}</if>
+            <if test="containerLatitude != null  and containerLatitude != ''"> and container_latitude = #{containerLatitude}</if>
+            <if test="shipId != null "> and ship_id = #{shipId}</if>
+            <if test="cabinId != null "> and cabin_id = #{cabinId}</if>
+            <if test="containerImage != null  and containerImage != ''"> and container_image = #{containerImage}</if>
+        </where>
+    </select>
+    
+    <select id="selectBContainerByContainerId" parameterType="Long" resultMap="BContainerResult">
+        <include refid="selectBContainerVo"/>
+        where container_id = #{containerId}
+    </select>
+        
+    <insert id="insertBContainer" parameterType="BContainer" useGeneratedKeys="true" keyProperty="containerId">
+        insert into b_container
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="containerType != null">container_type,</if>
+            <if test="currentWeight != null">current_weight,</if>
+            <if test="currentVolume != null">current_volume,</if>
+            <if test="maxWeight != null">max_weight,</if>
+            <if test="maxVolume != null">max_volume,</if>
+            <if test="containerLocation != null">container_location,</if>
+            <if test="containerStatus != null">container_status,</if>
+            <if test="containerTemperature != null">container_temperature,</if>
+            <if test="containerHumidity != null">container_humidity,</if>
+            <if test="containerLongitude != null">container_longitude,</if>
+            <if test="containerLatitude != null">container_latitude,</if>
+            <if test="shipId != null">ship_id,</if>
+            <if test="cabinId != null">cabin_id,</if>
+            <if test="containerImage != null">container_image,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="containerType != null">#{containerType},</if>
+            <if test="currentWeight != null">#{currentWeight},</if>
+            <if test="currentVolume != null">#{currentVolume},</if>
+            <if test="maxWeight != null">#{maxWeight},</if>
+            <if test="maxVolume != null">#{maxVolume},</if>
+            <if test="containerLocation != null">#{containerLocation},</if>
+            <if test="containerStatus != null">#{containerStatus},</if>
+            <if test="containerTemperature != null">#{containerTemperature},</if>
+            <if test="containerHumidity != null">#{containerHumidity},</if>
+            <if test="containerLongitude != null">#{containerLongitude},</if>
+            <if test="containerLatitude != null">#{containerLatitude},</if>
+            <if test="shipId != null">#{shipId},</if>
+            <if test="cabinId != null">#{cabinId},</if>
+            <if test="containerImage != null">#{containerImage},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBContainer" parameterType="BContainer">
+        update b_container
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="containerType != null">container_type = #{containerType},</if>
+            <if test="currentWeight != null">current_weight = #{currentWeight},</if>
+            <if test="currentVolume != null">current_volume = #{currentVolume},</if>
+            <if test="maxWeight != null">max_weight = #{maxWeight},</if>
+            <if test="maxVolume != null">max_volume = #{maxVolume},</if>
+            <if test="containerStatus != null">container_location = #{containerLocation},</if>
+            <if test="containerStatus != null">container_status = #{containerStatus},</if>
+            <if test="containerTemperature != null">container_temperature = #{containerTemperature},</if>
+            <if test="containerHumidity != null">container_humidity = #{containerHumidity},</if>
+            <if test="containerLongitude != null">container_longitude = #{containerLongitude},</if>
+            <if test="containerLatitude != null">container_latitude = #{containerLatitude},</if>
+            <if test="shipId != null">ship_id = #{shipId},</if>
+            <if test="cabinId != null">cabin_id = #{cabinId},</if>
+            <if test="containerImage != null">container_image = #{containerImage},</if>
+        </trim>
+        where container_id = #{containerId}
+    </update>
+
+    <delete id="deleteBContainerByContainerId" parameterType="Long">
+        delete from b_container where container_id = #{containerId}
+    </delete>
+
+    <delete id="deleteBContainerByContainerIds" parameterType="String">
+        delete from b_container where container_id in 
+        <foreach item="containerId" collection="array" open="(" separator="," close=")">
+            #{containerId}
+        </foreach>
+    </delete>
+</mapper>

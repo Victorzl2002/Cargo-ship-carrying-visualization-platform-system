@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ship.mapper.BShipMapper">
+    
+    <resultMap type="BShip" id="BShipResult">
+        <result property="shipId"    column="ship_id"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="shipName"    column="ship_name"    />
+        <result property="shipType"    column="ship_type"    />
+        <result property="shipBox"    column="ship_box"    />
+        <result property="shipDraft"    column="ship_draft"    />
+        <result property="shipNetweight"    column="ship_netweight"    />
+        <result property="shipWeight"    column="ship_weight"    />
+        <result property="shipMmsi"    column="ship_mmsi"    />
+        <result property="shipPortofregistry"    column="ship_portofregistry"    />
+        <result property="shipCallsign"    column="ship_callsign"    />
+        <result property="shipNationality"    column="ship_nationality"    />
+        <result property="shipImo"    column="ship_imo"    />
+        <result property="shipLength"    column="ship_length"    />
+        <result property="shipImage"    column="ship_image"    />
+        <result property="shipStatus"    column="ship_status"    />
+    </resultMap>
+
+    <sql id="selectBShipVo">
+        select ship_id, company_id, ship_name, ship_type,ship_box,ship_draft, ship_netweight, ship_weight, ship_mmsi, ship_portofregistry, ship_callsign, ship_nationality, ship_imo, ship_length, ship_image, ship_status from b_ship
+    </sql>
+
+    <select id="selectBShipList" parameterType="BShip" resultMap="BShipResult">
+        <include refid="selectBShipVo"/>
+        <where>  
+            <if test="companyId != null "> and company_id = #{companyId}</if>
+            <if test="shipName != null  and shipName != ''"> and ship_name like concat('%', #{shipName}, '%')</if>
+            <if test="shipType != null  and shipType != ''"> and ship_type = #{shipType}</if>
+            <if test="shipBox != null "> and ship_box = #{shipBox}</if>
+            <if test="shipDraft != null "> and ship_draft = #{shipDraft}</if>
+            <if test="shipNetweight != null "> and ship_netweight = #{shipNetweight}</if>
+            <if test="shipWeight != null "> and ship_weight = #{shipWeight}</if>
+            <if test="shipMmsi != null  and shipMmsi != ''"> and ship_mmsi = #{shipMmsi}</if>
+            <if test="shipPortofregistry != null  and shipPortofregistry != ''"> and ship_portofregistry = #{shipPortofregistry}</if>
+            <if test="shipCallsign != null  and shipCallsign != ''"> and ship_callsign = #{shipCallsign}</if>
+            <if test="shipNationality != null  and shipNationality != ''"> and ship_nationality = #{shipNationality}</if>
+            <if test="shipImo != null  and shipImo != ''"> and ship_imo = #{shipImo}</if>
+            <if test="shipLength != null "> and ship_length = #{shipLength}</if>
+            <if test="shipImage != null  and shipImage != ''"> and ship_image = #{shipImage}</if>
+            <if test="shipStatus != null  and shipStatus != ''"> and ship_status = #{shipStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectBShipByShipId" parameterType="Long" resultMap="BShipResult">
+        <include refid="selectBShipVo"/>
+        where ship_id = #{shipId}
+    </select>
+        
+    <insert id="insertBShip" parameterType="BShip">
+        insert into b_ship
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="shipId != null">ship_id,</if>
+            <if test="companyId != null">company_id,</if>
+            <if test="shipName != null">ship_name,</if>
+            <if test="shipType != null">ship_type,</if>
+            <if test="shipBox != null">ship_box,</if>
+            <if test="shipDraft != null">ship_draft,</if>
+            <if test="shipNetweight != null">ship_netweight,</if>
+            <if test="shipWeight != null">ship_weight,</if>
+            <if test="shipMmsi != null">ship_mmsi,</if>
+            <if test="shipPortofregistry != null">ship_portofregistry,</if>
+            <if test="shipCallsign != null">ship_callsign,</if>
+            <if test="shipNationality != null">ship_nationality,</if>
+            <if test="shipImo != null">ship_imo,</if>
+            <if test="shipLength != null">ship_length,</if>
+            <if test="shipImage != null">ship_image,</if>
+            <if test="shipStatus != null">ship_status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="shipId != null">#{shipId},</if>
+            <if test="companyId != null">#{companyId},</if>
+            <if test="shipName != null">#{shipName},</if>
+            <if test="shipType != null">#{shipType},</if>
+            <if test="shipBox != null">#{shipBox},</if>
+            <if test="shipDraft != null">#{shipDraft},</if>
+            <if test="shipNetweight != null">#{shipNetweight},</if>
+            <if test="shipWeight != null">#{shipWeight},</if>
+            <if test="shipMmsi != null">#{shipMmsi},</if>
+            <if test="shipPortofregistry != null">#{shipPortofregistry},</if>
+            <if test="shipCallsign != null">#{shipCallsign},</if>
+            <if test="shipNationality != null">#{shipNationality},</if>
+            <if test="shipImo != null">#{shipImo},</if>
+            <if test="shipLength != null">#{shipLength},</if>
+            <if test="shipImage != null">#{shipImage},</if>
+            <if test="shipStatus != null">#{shipStatus},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBShip" parameterType="BShip">
+        update b_ship
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="shipName != null">ship_name = #{shipName},</if>
+            <if test="shipType != null">ship_type = #{shipType},</if>
+            <if test="shipBox != null">ship_box = #{shipBox},</if>
+            <if test="shipDraft != null">ship_draft = #{shipDraft},</if>
+            <if test="shipNetweight != null">ship_netweight = #{shipNetweight},</if>
+            <if test="shipWeight != null">ship_weight = #{shipWeight},</if>
+            <if test="shipMmsi != null">ship_mmsi = #{shipMmsi},</if>
+            <if test="shipPortofregistry != null">ship_portofregistry = #{shipPortofregistry},</if>
+            <if test="shipCallsign != null">ship_callsign = #{shipCallsign},</if>
+            <if test="shipNationality != null">ship_nationality = #{shipNationality},</if>
+            <if test="shipImo != null">ship_imo = #{shipImo},</if>
+            <if test="shipLength != null">ship_length = #{shipLength},</if>
+            <if test="shipImage != null">ship_image = #{shipImage},</if>
+            <if test="shipStatus != null">ship_status = #{shipStatus},</if>
+        </trim>
+        where ship_id = #{shipId}
+    </update>
+
+    <delete id="deleteBShipByShipId" parameterType="Long">
+        delete from b_ship where ship_id = #{shipId}
+    </delete>
+
+    <delete id="deleteBShipByShipIds" parameterType="String">
+        delete from b_ship where ship_id in 
+        <foreach item="shipId" collection="array" open="(" separator="," close=")">
+            #{shipId}
+        </foreach>
+    </delete>
+</mapper>

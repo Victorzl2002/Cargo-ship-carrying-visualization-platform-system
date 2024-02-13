@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.allocation.mapper.BAllocationMapper">
+    
+    <resultMap type="BAllocation" id="BAllocationResult">
+        <result property="allocationId"    column="allocation_id"    />
+        <result property="scheduleId"    column="schedule_id"    />
+        <result property="cargoId"    column="cargo_id"    />
+        <result property="containerId"    column="container_id"    />
+        <result property="allocationDate"    column="allocation_date"    />
+    </resultMap>
+
+    <sql id="selectBAllocationVo">
+        select allocation_id, schedule_id, cargo_id, container_id, allocation_date from b_allocation
+    </sql>
+
+    <select id="selectBAllocationList" parameterType="BAllocation" resultMap="BAllocationResult">
+        <include refid="selectBAllocationVo"/>
+        <where>  
+            <if test="scheduleId != null "> and schedule_id = #{scheduleId}</if>
+            <if test="cargoId != null "> and cargo_id = #{cargoId}</if>
+            <if test="containerId != null "> and container_id = #{containerId}</if>
+            <if test="allocationDate != null "> and allocation_date = #{allocationDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectBAllocationByAllocationId" parameterType="Long" resultMap="BAllocationResult">
+        <include refid="selectBAllocationVo"/>
+        where allocation_id = #{allocationId}
+    </select>
+        
+    <insert id="insertBAllocation" parameterType="BAllocation" useGeneratedKeys="true" keyProperty="allocationId">
+        insert into b_allocation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="scheduleId != null">schedule_id,</if>
+            <if test="cargoId != null">cargo_id,</if>
+            <if test="containerId != null">container_id,</if>
+            <if test="allocationDate != null">allocation_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="scheduleId != null">#{scheduleId},</if>
+            <if test="cargoId != null">#{cargoId},</if>
+            <if test="containerId != null">#{containerId},</if>
+            <if test="allocationDate != null">#{allocationDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBAllocation" parameterType="BAllocation">
+        update b_allocation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="scheduleId != null">schedule_id = #{scheduleId},</if>
+            <if test="cargoId != null">cargo_id = #{cargoId},</if>
+            <if test="containerId != null">container_id = #{containerId},</if>
+            <if test="allocationDate != null">allocation_date = #{allocationDate},</if>
+        </trim>
+        where allocation_id = #{allocationId}
+    </update>
+
+    <delete id="deleteBAllocationByAllocationId" parameterType="Long">
+        delete from b_allocation where allocation_id = #{allocationId}
+    </delete>
+
+    <delete id="deleteBAllocationByAllocationIds" parameterType="String">
+        delete from b_allocation where allocation_id in 
+        <foreach item="allocationId" collection="array" open="(" separator="," close=")">
+            #{allocationId}
+        </foreach>
+    </delete>
+</mapper>

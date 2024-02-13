@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.dangerinfo.mapper.BDangerMapper">
+    
+    <resultMap type="BDanger" id="BDangerResult">
+        <result property="dangerId"    column="danger_id"    />
+        <result property="beforeImage"    column="before_image"    />
+        <result property="afterImage"    column="after_image"    />
+        <result property="dangerDescrition"    column="danger_descrition"    />
+        <result property="dangerStatus"    column="danger_status"    />
+        <result property="dangerTime"    column="danger_time"    />
+    </resultMap>
+
+    <sql id="selectBDangerVo">
+        select danger_id, before_image, after_image, danger_descrition, danger_status, danger_time from b_danger
+    </sql>
+
+    <select id="selectBDangerList" parameterType="BDanger" resultMap="BDangerResult">
+        <include refid="selectBDangerVo"/>
+        <where>  
+            <if test="beforeImage != null  and beforeImage != ''"> and before_image = #{beforeImage}</if>
+            <if test="afterImage != null  and afterImage != ''"> and after_image = #{afterImage}</if>
+            <if test="dangerDescrition != null  and dangerDescrition != ''"> and danger_descrition = #{dangerDescrition}</if>
+            <if test="dangerStatus != null  and dangerStatus != ''"> and danger_status = #{dangerStatus}</if>
+            <if test="dangerTime != null "> and danger_time = #{dangerTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectBDangerByDangerId" parameterType="Long" resultMap="BDangerResult">
+        <include refid="selectBDangerVo"/>
+        where danger_id = #{dangerId}
+    </select>
+        
+    <insert id="insertBDanger" parameterType="BDanger">
+        insert into b_danger
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dangerId != null">danger_id,</if>
+            <if test="beforeImage != null">before_image,</if>
+            <if test="afterImage != null">after_image,</if>
+            <if test="dangerDescrition != null">danger_descrition,</if>
+            <if test="dangerStatus != null">danger_status,</if>
+            <if test="dangerTime != null">danger_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="dangerId != null">#{dangerId},</if>
+            <if test="beforeImage != null">#{beforeImage},</if>
+            <if test="afterImage != null">#{afterImage},</if>
+            <if test="dangerDescrition != null">#{dangerDescrition},</if>
+            <if test="dangerStatus != null">#{dangerStatus},</if>
+            <if test="dangerTime != null">#{dangerTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBDanger" parameterType="BDanger">
+        update b_danger
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="beforeImage != null">before_image = #{beforeImage},</if>
+            <if test="afterImage != null">after_image = #{afterImage},</if>
+            <if test="dangerDescrition != null">danger_descrition = #{dangerDescrition},</if>
+            <if test="dangerStatus != null">danger_status = #{dangerStatus},</if>
+            <if test="dangerTime != null">danger_time = #{dangerTime},</if>
+        </trim>
+        where danger_id = #{dangerId}
+    </update>
+
+    <delete id="deleteBDangerByDangerId" parameterType="Long">
+        delete from b_danger where danger_id = #{dangerId}
+    </delete>
+
+    <delete id="deleteBDangerByDangerIds" parameterType="String">
+        delete from b_danger where danger_id in 
+        <foreach item="dangerId" collection="array" open="(" separator="," close=")">
+            #{dangerId}
+        </foreach>
+    </delete>
+</mapper>

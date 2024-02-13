@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+    <!-- 头部模块 -->
+    <div class="header">
+        <ul class="left">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+        <div class="title">
+            <span>集装箱分配空间可视化</span>
+        </div>
+        <ul class="right">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+    <!-- 主体模块 -->
+    <div class="main">
+        <!-- 左侧模块 -->
+        <div class="main-left">
+            <!-- 完成率 -->
+            <div class="completion">
+                <div class="completion-content">
+                    <div class="rate">
+                        <h5><span>完成率</span></h5>
+                        <p>89%</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 闪电 -->
+            <div class="lightning">
+                <div class="lightning1">
+                    <div class="sd1"></div>
+                    <div class="jd1">
+                        <ul class="cd">
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                        </ul>
+                        <div class="box1"></div>
+                        <div class="box2"></div>
+                    </div>
+                </div>
+                <div class="lightning2">
+                    <div class="sd2"></div>
+                    <div class="jd2">
+                        <ul class="cd">
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                        </ul>
+                        <div class="box1"></div>
+                        <div class="box2"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- top3 -->
+            <div class="top3">
+                <ul>
+                    <li>
+                        <div class="title">NO.1</div>
+                        <div class="content">
+                            <p>80%</p>
+                            <span>连云港</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="title">NO.2</div>
+                        <div class="content">
+                            <p>80%</p>
+                            <span></span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="title">NO.3</div>
+                        <div class="content">
+                            <p>80%</p>
+                            <span></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- 中间模块 -->
+        <div class="main-middle">
+            <div class="external1"></div>
+            <div class="external2"></div>
+            <div class="external3"></div>
+            <div class="external4"></div>
+            <!-- 加载 -->
+            <div class="jz1">
+                <ul>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+            </div>
+            <div class="jz2">
+                <ul>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+            </div>
+            <!-- 内边框 -->
+            <div class="inner1"></div>
+            <div class="inner2"></div>
+            <!-- 内加载箭头模块 -->
+            <div class="arrow-l">
+                <ol>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ol>
+            </div>
+            <div class="arrow-r">
+                <ol>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ol>
+            </div>
+            <!-- 中间仪表图 -->
+            <div class="meter"></div>
+            <!-- 中间背景canvas -->
+            <div class="animate"></div>
+            <!-- 销售额 -->
+            <div class="sale">
+                <p><span>分配总金额</span></p>
+                <p><span>25000</span></p>
+            </div>
+        </div>
+        <!-- 右侧模块 -->
+        <div class="main-right">
+            <!-- 限容 -->
+            <div class="compare">
+                <div class="compare-content">
+                    <div class="rate2">
+                        <h5><span>限容</span></h5>
+                        <p>0.58</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 闪电 -->
+            <div class="lightning">
+                <div class="lightning3">
+                    <div class="jd3">
+                        <ul class="cd">
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                        </ul>
+                        <div class="box1"></div>
+                        <div class="box2"></div>
+                    </div>
+                    <div class="sd3"></div>
+                </div>
+                <div class="lightning4">
+                    <div class="jd4">
+                        <ul class="cd">
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                        </ul>
+                        <div class="box1"></div>
+                        <div class="box2"></div>
+                    </div>
+                    <div class="sd4"></div>
+                </div>
+            </div>
+            <!-- top6 -->
+            <div class="top6">
+                <ul>
+                    <li>
+                        <div class="title">NO.4</div>
+                        <div class="content">
+                            <p>80%</p>
+                            <span></span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="title">NO.5</div>
+                        <div class="content">
+                            <p>80%</p>
+                            <span></span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="title">NO.6</div>
+                        <div class="content">
+                            <p>80%</p>
+                            <span></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- 底部模块 -->
+    <div class="bottom">
+        <div class="ul-box">
+            <ul>
+                <li>
+                    <div class="li-content container1">
+                        <p><span>集装箱1</span></p>
+                        <p><span>9000</span></p>
+                        <div class="li-box">
+                            <div class="box1">
+                                <h5><span>分配率</span></h5>
+                                <div class="pic">
+                                    <img src="./images/wc.png" alt="">
+                                    <span>97.6%</span>
+                                </div>
+                            </div>
+                            <div class="box2">
+                                <h5><span>现有容积</span></h5>
+                                <div class="pic">
+                                    <img src="./images/zc.png" alt="">
+                                    <span>65m³</span>
+                                </div>
+                            </div>
+                            <div class="box3">
+                                <h5><span>净重</span></h5>
+                                <div class="pic">
+                                    <img src="./images/sq.png" alt="">
+                                    <span>6000kg</span>
+                                </div>
+                            </div>
+                            <div class="box4">
+                                <h5><span>限容</span></h5>
+                                <div class="pic">
+                                    <img src="./images/tb.png" alt="">
+                                    <span>67.7m³</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="li-content container2">
+                        <p><span>集装箱2</span></p>
+                        <p><span>8000</span></p>
+                        <div class="li-box">
+                            <div class="box1">
+                                <h5><span>分配率</span></h5>
+                                <div class="pic">
+                                    <img src="./images/wc.png" alt="">
+                                    <span>44.7%</span>
+                                </div>
+                            </div>
+                            <div class="box2">
+                                <h5><span>现有容积</span></h5>
+                                <div class="pic">
+                                    <img src="./images/zc.png" alt="">
+                                    <span>30m³</span>
+                                </div>
+                            </div>
+                            <div class="box3">
+                                <h5><span>净重</span></h5>
+                                <div class="pic">
+                                    <img src="./images/sq.png" alt="">
+                                    <span>6000kg</span>
+                                </div>
+                            </div>
+                            <div class="box4">
+                                <h5><span>限容</span></h5>
+                                <div class="pic">
+                                    <img src="./images/tb.png" alt="">
+                                    <span>67.7m³</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="li-content container5">
+                        <p><span>集装箱5</span></p>
+                        <p><span>3000</span></p>
+                        <div class="li-box">
+                            <div class="box1">
+                                <h5><span>分配率</span></h5>
+                                <div class="pic">
+                                    <img src="./images/wc.png" alt="">
+                                    <span>91%</span>
+                                </div>
+                            </div>
+                            <div class="box2">
+                                <h5><span>现有容积</span></h5>
+                                <div class="pic">
+                                    <img src="./images/zc.png" alt="">
+                                    <span>30m³</span>
+                                </div>
+                            </div>
+                            <div class="box3">
+                                <h5><span>净重</span></h5>
+                                <div class="pic">
+                                    <img src="./images/sq.png" alt="">
+                                    <span>3000kg</span>
+                                </div>
+                            </div>
+                            <div class="box4">
+                                <h5><span>限容</span></h5>
+                                <div class="pic">
+                                    <img src="./images/tb.png" alt="">
+                                    <span>60m³</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    <div class="li-content container6">
+                        <p><span>集装箱6</span></p>
+                        <p><span>2500</span></p>
+                        <div class="li-box">
+                            <div class="box1">
+                                <h5><span>分配率</span></h5>
+                                <div class="pic">
+                                    <img src="./images/wc.png" alt="">
+                                    <span>50%</span>
+                                </div>
+                            </div>
+                            <div class="box2">
+                                <h5><span>现有容积</span></h5>
+                                <div class="pic">
+                                    <img src="./images/zc.png" alt="">
+                                    <span>50m³</span>
+                                </div>
+                            </div>
+                            <div class="box3">
+                                <h5><span>净重</span></h5>
+                                <div class="pic">
+                                    <img src="./images/sq.png" alt="">
+                                    <span>4000kg</span>
+                                </div>
+                            </div>
+                            <div class="box4">
+                                <h5><span>限容</span></h5>
+                                <div class="pic">
+                                    <img src="./images/tb.png" alt="">
+                                    <span>100m³</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="li-content container7">
+                        <p><span>集装箱7</span></p>
+                        <p><span>1000</span></p>
+                        <div class="li-box">
+                            <div class="box1">
+                                <h5><span>分配率</span></h5>
+                                <div class="pic">
+                                    <img src="./images/wc.png" alt="">
+                                    <span>80%</span>
+                                </div>
+                            </div>
+                            <div class="box2">
+                                <h5><span>现有容积</span></h5>
+                                <div class="pic">
+                                    <img src="./images/zc.png" alt="">
+                                    <span>120m³</span>
+                                </div>
+                            </div>
+                            <div class="box3">
+                                <h5><span>净重</span></h5>
+                                <div class="pic">
+                                    <img src="./images/sq.png" alt="">
+                                    <span>5000kg</span>
+                                </div>
+                            </div>
+                            <div class="box4">
+                                <h5><span>限容</span></h5>
+                                <div class="pic">
+                                    <img src="./images/tb.png" alt="">
+                                    <span>150m³</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <!-- <li>
+                    <div class="li-content">
+                        <p><span>集装箱6</span></p>
+                        <p><span>2000</span></p>
+                        <div class="li-box">
+                            <div class="box1">
+                                <h5><span>分配率</span></h5>
+                                <div class="pic">
+                                    <img src="./images/wc.png" alt="">
+                                    <span>99.6%</span>
+                                </div>
+                            </div>
+                            <div class="box2">
+                                <h5><span>现有容积</span></h5>
+                                <div class="pic">
+                                    <img src="./images/zc.png" alt="">
+                                    <span>74.6%</span>
+                                </div>
+                            </div>
+                            <div class="box3">
+                                <h5><span>净重</span></h5>
+                                <div class="pic">
+                                    <img src="./images/sq.png" alt="">
+                                    <span>83.3%</span>
+                                </div>
+                            </div>
+                            <div class="box4">
+                                <h5><span>限容</span></h5>
+                                <div class="pic">
+                                    <img src="./images/tb.png" alt="">
+                                    <span>55.3%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li> -->
+            </ul>
+        </div>
+    </div>
+</body>
+<!-- <script src="./node_modules/jquery/dist/jquery.min.js"></script> -->
+<script src="./js/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.5/lodash.min.js"></script>
+<script src="./js/main.js"></script>
+<script>
+    // 使用 jQuery 准备好 DOM 后执行
+    $(document).ready(function () {
+        // 为所有 .li-content 元素添加点击事件
+        $('.container1').on('click', function () {
+            var popupContent = `
+                    <div class="popup">
+                        <div class="left-section">
+                         <img src="./images/干货集装箱2.jpg" alt="Container Image">
+                         </div>
+                        <div class="right-section">
+                        <ul class="container">
+                            <li class="containercontent">冰箱<img src="./images/冰箱.jpg" alt="Image"></li>
+                            <li class="containercontent">电脑<img src="./images/电脑.jpg" alt="Image"></li>
+                        </ul>
+                        </div>
+                        <button>关闭</button>
+                    </div>`;
+            // 将弹出 div 添加到被点击的 .li-content 元素中
+            $('.main-middle').append(popupContent);
+            //点击页面其他地方关闭弹出窗口
+        });
+        $('.container2').on('click', function () {
+            var popupContent = `
+                    <div class="popup">
+                        <div class="left-section">
+                         <img src="./images/干货集装箱1.jpg" alt="Container Image">
+                         </div>
+                        <div class="right-section">
+                        <ul class="container">
+                            <li class="containercontent">液晶电视<img src="./images/液晶电视.png" alt="Image"></li>
+                            <li class="containercontent">空调<img src="./images/空调.jpg" alt="Image"></li>
+                        </ul>
+                        </div>
+                        <button>关闭</button>
+                    </div>`;
+            // 将弹出 div 添加到被点击的 .li-content 元素中
+            $('.main-middle').append(popupContent);
+            //点击页面其他地方关闭弹出窗口
+        });
+        $('.container5').on('click', function () {
+            var popupContent = `
+                    <div class="popup">
+                        <div class="left-section">
+                         <img src="./images/冷藏集装箱1.jpg" alt="Container Image">
+                         </div>
+                        <div class="right-section">
+                        <ul class="container">
+                            <li class="containercontent">西瓜<img src="./images/西瓜.jpg" alt="Image"></li>
+                        </ul>
+                        </div>
+                        <button>关闭</button>
+                    </div>`;
+            // 将弹出 div 添加到被点击的 .li-content 元素中
+            $('.main-middle').append(popupContent);
+            //点击页面其他地方关闭弹出窗口
+        });
+        $('.container6').on('click', function () {
+            var popupContent = `
+                    <div class="popup">
+                        <div class="left-section">
+                         <img src="./images/冷藏集装箱2.jpg" alt="Container Image">
+                         </div>
+                        <div class="right-section">
+                        <ul class="container">
+                            <li class="containercontent">哈密瓜<img src="./images/哈密瓜.jpg" alt="Image"></li>
+                        </ul>
+                        </div>
+                        <button>关闭</button>
+                    </div>`;
+            // 将弹出 div 添加到被点击的 .li-content 元素中
+            $('.main-middle').append(popupContent);
+            //点击页面其他地方关闭弹出窗口
+        });
+        $('.container7').on('click', function () {
+            var popupContent = `
+                    <div class="popup">
+                        <div class="left-section">
+                         <img src="./images/开顶集装箱.jpg" alt="Container Image">
+                         </div>
+                        <div class="right-section">
+                        <ul class="container">
+                            <li class="containercontent">钢材<img src="./images/钢材.jpg" alt="Image"></li>
+                        </ul>
+                        </div>
+                        <button>关闭</button>
+                    </div>`;
+            // 将弹出 div 添加到被点击的 .li-content 元素中
+            $('.main-middle').append(popupContent);
+            //点击页面其他地方关闭弹出窗口
+        });
+        $('.main-middle').on('click', '.popup button', function () {
+            // Handle button click
+            // For example, you can close the popup
+            closePopup();
+        });
+        function closePopup() {
+            $('.popup').remove();
+        }
+    });
+</script>
+
+</html>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.pile.mapper.BPileMapper">
+    
+    <resultMap type="BPile" id="BPileResult">
+        <result property="pileId"    column="pile_id"    />
+        <result property="pileX"    column="pile_x"    />
+        <result property="pileY"    column="pile_y"    />
+        <result property="pileCapacity"    column="pile_capacity"    />
+        <result property="pileCurrentnum"    column="pile_currentnum"    />
+        <result property="pileStatus"    column="pile_status"    />
+    </resultMap>
+
+    <sql id="selectBPileVo">
+        select pile_id, pile_x, pile_y, pile_capacity, pile_currentnum, pile_status from b_pile
+    </sql>
+
+    <select id="selectBPileList" parameterType="BPile" resultMap="BPileResult">
+        <include refid="selectBPileVo"/>
+        <where>  
+            <if test="pileX != null  and pileX != ''"> and pile_x = #{pileX}</if>
+            <if test="pileY != null  and pileY != ''"> and pile_y = #{pileY}</if>
+            <if test="pileCapacity != null  and pileCapacity != ''"> and pile_capacity = #{pileCapacity}</if>
+            <if test="pileCurrentnum != null "> and pile_currentnum = #{pileCurrentnum}</if>
+            <if test="pileStatus != null  and pileStatus != ''"> and pile_status = #{pileStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectBPileByPileId" parameterType="Long" resultMap="BPileResult">
+        <include refid="selectBPileVo"/>
+        where pile_id = #{pileId}
+    </select>
+        
+    <insert id="insertBPile" parameterType="BPile" useGeneratedKeys="true" keyProperty="pileId">
+        insert into b_pile
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pileX != null">pile_x,</if>
+            <if test="pileY != null">pile_y,</if>
+            <if test="pileCapacity != null">pile_capacity,</if>
+            <if test="pileCurrentnum != null">pile_currentnum,</if>
+            <if test="pileStatus != null">pile_status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pileX != null">#{pileX},</if>
+            <if test="pileY != null">#{pileY},</if>
+            <if test="pileCapacity != null">#{pileCapacity},</if>
+            <if test="pileCurrentnum != null">#{pileCurrentnum},</if>
+            <if test="pileStatus != null">#{pileStatus},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBPile" parameterType="BPile">
+        update b_pile
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pileX != null">pile_x = #{pileX},</if>
+            <if test="pileY != null">pile_y = #{pileY},</if>
+            <if test="pileCapacity != null">pile_capacity = #{pileCapacity},</if>
+            <if test="pileCurrentnum != null">pile_currentnum = #{pileCurrentnum},</if>
+            <if test="pileStatus != null">pile_status = #{pileStatus},</if>
+        </trim>
+        where pile_id = #{pileId}
+    </update>
+
+    <delete id="deleteBPileByPileId" parameterType="Long">
+        delete from b_pile where pile_id = #{pileId}
+    </delete>
+
+    <delete id="deleteBPileByPileIds" parameterType="String">
+        delete from b_pile where pile_id in 
+        <foreach item="pileId" collection="array" open="(" separator="," close=")">
+            #{pileId}
+        </foreach>
+    </delete>
+</mapper>

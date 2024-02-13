@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.routeschedule.mapper.BRoutescheduleMapper">
+    
+    <resultMap type="BRouteschedule" id="BRoutescheduleResult">
+        <result property="routescheduleId"    column="routeschedule_id"    />
+        <result property="shipId"    column="ship_id"    />
+        <result property="routeId"    column="route_id"    />
+        <result property="hdcompanyId"    column="hdcompany_id"    />
+        <result property="departurePort"    column="departure_port"    />
+        <result property="endingPort"    column="ending_port"    />
+        <result property="scheduleBox"    column="schedule_box"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="routeDistance"    column="route_distance"    />
+        <result property="estimatedDuration"    column="estimated_duration"    />
+    </resultMap>
+
+    <sql id="selectBRoutescheduleVo">
+        select routeschedule_id, ship_id, route_id,hdcompany_id, departure_port, ending_port,schedule_box,start_time,end_time, route_distance, estimated_duration from b_routeschedule
+    </sql>
+
+    <select id="selectBRoutescheduleList" parameterType="BRouteschedule" resultMap="BRoutescheduleResult">
+        <include refid="selectBRoutescheduleVo"/>
+        <where>  
+            <if test="shipId != null "> and ship_id = #{shipId}</if>
+            <if test="routeId != null "> and route_id = #{routeId}</if>
+            <if test="hdcompanyId != null "> and  hdcompany_id= #{hdcompany_id}</if>
+            <if test="departurePort != null  and departurePort != ''"> and departure_port = #{departurePort}</if>
+            <if test="endingPort != null  and endingPort != ''"> and ending_port = #{endingPort}</if>
+<!--            <if test="scheduleBox != null">and schedule_box = #{scheduleBox}</if>-->
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="routeDistance != null "> and route_distance = #{routeDistance}</if>
+            <if test="estimatedDuration != null "> and estimated_duration = #{estimatedDuration}</if>
+        </where>
+    </select>
+    
+    <select id="selectBRoutescheduleByRoutescheduleId" parameterType="Long" resultMap="BRoutescheduleResult">
+        <include refid="selectBRoutescheduleVo"/>
+        where routeschedule_id = #{routescheduleId}
+    </select>
+
+    <select id="selectBRoutescheduleListdate" parameterType="BRouteschedule" resultMap="BRoutescheduleResult">
+        <include refid="selectBRoutescheduleVo"/>
+        <where>
+            <if test="shipId != null "> and ship_id = #{shipId}</if>
+            <if test="routeId != null "> and route_id = #{routeId}</if>
+            <if test="hdcompanyId != null "> and  hdcompany_id= #{hdcompanyId}</if>
+            <if test="departurePort != null  and departurePort != ''"> and departure_port = #{departurePort}</if>
+            <if test="endingPort != null  and endingPort != ''"> and ending_port = #{endingPort}</if>
+<!--            <if test="scheduleBox != null">and schedule_box = #{scheduleBox}</if>-->
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and DATE(end_time)= #{endTime}</if>
+            <if test="routeDistance != null "> and route_distance = #{routeDistance}</if>
+            <if test="estimatedDuration != null "> and estimated_duration = #{estimatedDuration}</if>
+        </where>
+    </select>
+
+    <insert id="insertBRouteschedule" parameterType="BRouteschedule" useGeneratedKeys="true" keyProperty="routescheduleId">
+        insert into b_routeschedule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="shipId != null">ship_id,</if>
+            <if test="routeId != null">route_id,</if>
+            <if test="hdcompanyId != null">hdcompany_id,</if>
+            <if test="departurePort != null">departure_port,</if>
+            <if test="endingPort != null">ending_port,</if>
+            <if test="scheduleBox != null">schedule_box,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="routeDistance != null">route_distance,</if>
+            <if test="estimatedDuration != null">estimated_duration,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="shipId != null">#{shipId},</if>
+            <if test="routeId != null">#{routeId},</if>
+            <if test="hdcompanyId != null">#{hdcompanyId},</if>
+            <if test="departurePort != null">#{departurePort},</if>
+            <if test="endingPort != null">#{endingPort},</if>
+            <if test="scheduleBox != null">#{scheduleBox},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="routeDistance != null">#{routeDistance},</if>
+            <if test="estimatedDuration != null">#{estimatedDuration},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBRouteschedule" parameterType="BRouteschedule">
+        update b_routeschedule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="shipId != null">ship_id = #{shipId},</if>
+            <if test="routeId != null">route_id = #{routeId},</if>
+            <if test="hdcompanyId != null"> hdcompany_id= #{hdcompanyId},</if>
+            <if test="departurePort != null">departure_port = #{departurePort},</if>
+            <if test="endingPort != null">ending_port = #{endingPort},</if>
+            <if test="scheduleBox != null">schedule_box = #{scheduleBox},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="routeDistance != null">route_distance = #{routeDistance},</if>
+            <if test="estimatedDuration != null">estimated_duration = #{estimatedDuration},</if>
+        </trim>
+        where routeschedule_id = #{routescheduleId}
+    </update>
+
+    <delete id="deleteBRoutescheduleByRoutescheduleId" parameterType="Long">
+        delete from b_routeschedule where routeschedule_id = #{routescheduleId}
+    </delete>
+
+    <delete id="deleteBRoutescheduleByRoutescheduleIds" parameterType="String">
+        delete from b_routeschedule where routeschedule_id in 
+        <foreach item="routescheduleId" collection="array" open="(" separator="," close=")">
+            #{routescheduleId}
+        </foreach>
+    </delete>
+</mapper>

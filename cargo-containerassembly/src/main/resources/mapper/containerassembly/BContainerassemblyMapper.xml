@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.containerassembly.mapper.BContainerassemblyMapper">
+    
+    <resultMap type="BContainerassembly" id="BContainerassemblyResult">
+        <result property="assemblyId"    column="assembly_id"    />
+        <result property="scheduleId"    column="schedule_id"    />
+        <result property="containerId"    column="container_id"    />
+        <result property="slotId"    column="slot_id"    />
+        <result property="assemblyTime"    column="assembly_time"    />
+    </resultMap>
+
+    <sql id="selectBContainerassemblyVo">
+        select assembly_id, schedule_id, container_id, slot_id, assembly_time from b_containerassembly
+    </sql>
+
+    <select id="selectBContainerassemblyList" parameterType="BContainerassembly" resultMap="BContainerassemblyResult">
+        <include refid="selectBContainerassemblyVo"/>
+        <where>  
+            <if test="scheduleId != null "> and schedule_id = #{scheduleId}</if>
+            <if test="containerId != null "> and container_id = #{containerId}</if>
+            <if test="slotId != null "> and slot_id = #{slotId}</if>
+            <if test="assemblyTime != null "> and assembly_time = #{assemblyTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectBContainerassemblyByAssemblyId" parameterType="Long" resultMap="BContainerassemblyResult">
+        <include refid="selectBContainerassemblyVo"/>
+        where assembly_id = #{assemblyId}
+    </select>
+        
+    <insert id="insertBContainerassembly" parameterType="BContainerassembly" useGeneratedKeys="true" keyProperty="assemblyId">
+        insert into b_containerassembly
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="scheduleId != null">schedule_id,</if>
+            <if test="containerId != null">container_id,</if>
+            <if test="slotId != null">slot_id,</if>
+            <if test="assemblyTime != null">assembly_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="scheduleId != null">#{scheduleId},</if>
+            <if test="containerId != null">#{containerId},</if>
+            <if test="slotId != null">#{slotId},</if>
+            <if test="assemblyTime != null">#{assemblyTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBContainerassembly" parameterType="BContainerassembly">
+        update b_containerassembly
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="scheduleId != null">schedule_id = #{scheduleId},</if>
+            <if test="containerId != null">container_id = #{containerId},</if>
+            <if test="slotId != null">slot_id = #{slotId},</if>
+            <if test="assemblyTime != null">assembly_time = #{assemblyTime},</if>
+        </trim>
+        where assembly_id = #{assemblyId}
+    </update>
+
+    <delete id="deleteBContainerassemblyByAssemblyId" parameterType="Long">
+        delete from b_containerassembly where assembly_id = #{assemblyId}
+    </delete>
+
+    <delete id="deleteBContainerassemblyByAssemblyIds" parameterType="String">
+        delete from b_containerassembly where assembly_id in 
+        <foreach item="assemblyId" collection="array" open="(" separator="," close=")">
+            #{assemblyId}
+        </foreach>
+    </delete>
+</mapper>

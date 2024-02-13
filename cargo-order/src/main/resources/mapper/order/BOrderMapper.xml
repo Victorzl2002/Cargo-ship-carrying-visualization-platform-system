@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.order.mapper.BOrderMapper">
+    
+    <resultMap type="BOrder" id="BOrderResult">
+        <result property="orderId"    column="order_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="cargoId"    column="cargo_id"    />
+        <result property="scheduleId"    column="schedule_id"    />
+        <result property="orderMoney"    column="order_money"    />
+        <result property="orderStatus"    column="order_status"    />
+        <result property="orderNotes"    column="order_notes"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectBOrderVo">
+        select order_id, user_id, cargo_id, schedule_id, order_money, order_status, order_notes, create_time from b_order
+    </sql>
+
+    <select id="selectBOrderList" parameterType="BOrder" resultMap="BOrderResult">
+        <include refid="selectBOrderVo"/>
+        <where>  
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="cargoId != null "> and cargo_id = #{cargoId}</if>
+            <if test="scheduleId != null "> and schedule_id = #{scheduleId}</if>
+            <if test="orderMoney != null "> and order_money = #{orderMoney}</if>
+            <if test="orderStatus != null  and orderStatus != ''"> and order_status = #{orderStatus}</if>
+            <if test="orderNotes != null  and orderNotes != ''"> and order_notes = #{orderNotes}</if>
+        </where>
+    </select>
+    
+    <select id="selectBOrderByOrderId" parameterType="String" resultMap="BOrderResult">
+        <include refid="selectBOrderVo"/>
+        where order_id = #{orderId}
+    </select>
+
+    <select id="selectBOrderByCargoId" parameterType="Long" resultMap="BOrderResult">
+        <include refid="selectBOrderVo"/>
+        where cargo_id = #{cargoId}
+    </select>
+
+    <insert id="insertBOrder" parameterType="BOrder">
+        insert into b_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">order_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="cargoId != null">cargo_id,</if>
+            <if test="scheduleId != null">schedule_id,</if>
+            <if test="orderMoney != null">order_money,</if>
+            <if test="orderStatus != null">order_status,</if>
+            <if test="orderNotes != null">order_notes,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">#{orderId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="cargoId != null">#{cargoId},</if>
+            <if test="scheduleId != null">#{scheduleId},</if>
+            <if test="orderMoney != null">#{orderMoney},</if>
+            <if test="orderStatus != null">#{orderStatus},</if>
+            <if test="orderNotes != null">#{orderNotes},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBOrder" parameterType="BOrder">
+        update b_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="cargoId != null">cargo_id = #{cargoId},</if>
+            <if test="scheduleId != null">schedule_id = #{scheduleId},</if>
+            <if test="orderMoney != null">order_money = #{orderMoney},</if>
+            <if test="orderStatus != null">order_status = #{orderStatus},</if>
+            <if test="orderNotes != null">order_notes = #{orderNotes},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where order_id = #{orderId}
+    </update>
+
+    <delete id="deleteBOrderByOrderId" parameterType="String">
+        delete from b_order where order_id = #{orderId}
+    </delete>
+
+    <delete id="deleteBOrderByOrderIds" parameterType="String">
+        delete from b_order where order_id in 
+        <foreach item="orderId" collection="array" open="(" separator="," close=")">
+            #{orderId}
+        </foreach>
+    </delete>
+</mapper>

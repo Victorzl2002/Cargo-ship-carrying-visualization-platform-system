@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.user.mapper.WxUserMapper">
+    
+    <resultMap type="WxUser" id="WxUserResult">
+        <result property="openId"    column="open_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="userIdentity"    column="user_identity"    />
+        <result property="phoneNumber"    column="phone_number"    />
+        <result property="walletBalance"    column="wallet_balance"    />
+    </resultMap>
+
+    <sql id="selectWxUserVo">
+        select open_id, user_name, user_identity, phone_number, wallet_balance from wx_user
+    </sql>
+
+    <select id="selectWxUserList" parameterType="WxUser" resultMap="WxUserResult">
+        <include refid="selectWxUserVo"/>
+        <where>  
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="userIdentity != null  and userIdentity != ''"> and user_identity = #{userIdentity}</if>
+            <if test="phoneNumber != null  and phoneNumber != ''"> and phone_number = #{phoneNumber}</if>
+            <if test="walletBalance != null "> and wallet_balance = #{walletBalance}</if>
+        </where>
+    </select>
+    
+    <select id="selectWxUserByOpenId" parameterType="String" resultMap="WxUserResult">
+        <include refid="selectWxUserVo"/>
+        where open_id = #{openId}
+    </select>
+        
+    <insert id="insertWxUser" parameterType="WxUser">
+        insert into wx_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="openId != null">open_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="userIdentity != null">user_identity,</if>
+            <if test="phoneNumber != null">phone_number,</if>
+            <if test="walletBalance != null">wallet_balance,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="openId != null">#{openId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="userIdentity != null">#{userIdentity},</if>
+            <if test="phoneNumber != null">#{phoneNumber},</if>
+            <if test="walletBalance != null">#{walletBalance},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWxUser" parameterType="WxUser">
+        update wx_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="userIdentity != null">user_identity = #{userIdentity},</if>
+            <if test="phoneNumber != null">phone_number = #{phoneNumber},</if>
+            <if test="walletBalance != null">wallet_balance = #{walletBalance},</if>
+        </trim>
+        where open_id = #{openId}
+    </update>
+
+    <delete id="deleteWxUserByOpenId" parameterType="String">
+        delete from wx_user where open_id = #{openId}
+    </delete>
+
+    <delete id="deleteWxUserByOpenIds" parameterType="String">
+        delete from wx_user where open_id in 
+        <foreach item="openId" collection="array" open="(" separator="," close=")">
+            #{openId}
+        </foreach>
+    </delete>
+</mapper>

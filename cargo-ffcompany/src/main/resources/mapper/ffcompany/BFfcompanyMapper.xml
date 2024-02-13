@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ffcompany.mapper.BFfcompanyMapper">
+    
+    <resultMap type="BFfcompany" id="BFfcompanyResult">
+        <result property="ffcompanyId"    column="ffcompany_id"    />
+        <result property="ffcompanyName"    column="ffcompany_name"    />
+        <result property="ffregisteredLocation"    column="ffregistered_location"    />
+        <result property="ffcontactAddress"    column="ffcontact_address"    />
+        <result property="ffcontactPhone"    column="ffcontact_phone"    />
+        <result property="ffEmail"    column="ff_email"    />
+        <result property="ffWebsite"    column="ff_website"    />
+        <result property="ffImage"    column="ff_image"    />
+    </resultMap>
+
+    <sql id="selectBFfcompanyVo">
+        select ffcompany_id, ffcompany_name, ffregistered_location, ffcontact_address, ffcontact_phone, ff_email, ff_website, ff_image from b_ffcompany
+    </sql>
+
+    <select id="selectBFfcompanyList" parameterType="BFfcompany" resultMap="BFfcompanyResult">
+        <include refid="selectBFfcompanyVo"/>
+        <where>  
+            <if test="ffcompanyName != null  and ffcompanyName != ''"> and ffcompany_name like concat('%', #{ffcompanyName}, '%')</if>
+            <if test="ffregisteredLocation != null  and ffregisteredLocation != ''"> and ffregistered_location = #{ffregisteredLocation}</if>
+            <if test="ffcontactAddress != null  and ffcontactAddress != ''"> and ffcontact_address = #{ffcontactAddress}</if>
+            <if test="ffcontactPhone != null  and ffcontactPhone != ''"> and ffcontact_phone = #{ffcontactPhone}</if>
+            <if test="ffEmail != null  and ffEmail != ''"> and ff_email = #{ffEmail}</if>
+            <if test="ffWebsite != null  and ffWebsite != ''"> and ff_website = #{ffWebsite}</if>
+            <if test="ffImage != null  and ffImage != ''"> and ff_image = #{ffImage}</if>
+        </where>
+    </select>
+    
+    <select id="selectBFfcompanyByFfcompanyId" parameterType="Long" resultMap="BFfcompanyResult">
+        <include refid="selectBFfcompanyVo"/>
+        where ffcompany_id = #{ffcompanyId}
+    </select>
+        
+    <insert id="insertBFfcompany" parameterType="BFfcompany" useGeneratedKeys="true" keyProperty="ffcompanyId">
+        insert into b_ffcompany
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ffcompanyName != null">ffcompany_name,</if>
+            <if test="ffregisteredLocation != null">ffregistered_location,</if>
+            <if test="ffcontactAddress != null">ffcontact_address,</if>
+            <if test="ffcontactPhone != null">ffcontact_phone,</if>
+            <if test="ffEmail != null">ff_email,</if>
+            <if test="ffWebsite != null">ff_website,</if>
+            <if test="ffImage != null">ff_image,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ffcompanyName != null">#{ffcompanyName},</if>
+            <if test="ffregisteredLocation != null">#{ffregisteredLocation},</if>
+            <if test="ffcontactAddress != null">#{ffcontactAddress},</if>
+            <if test="ffcontactPhone != null">#{ffcontactPhone},</if>
+            <if test="ffEmail != null">#{ffEmail},</if>
+            <if test="ffWebsite != null">#{ffWebsite},</if>
+            <if test="ffImage != null">#{ffImage},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBFfcompany" parameterType="BFfcompany">
+        update b_ffcompany
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ffcompanyName != null">ffcompany_name = #{ffcompanyName},</if>
+            <if test="ffregisteredLocation != null">ffregistered_location = #{ffregisteredLocation},</if>
+            <if test="ffcontactAddress != null">ffcontact_address = #{ffcontactAddress},</if>
+            <if test="ffcontactPhone != null">ffcontact_phone = #{ffcontactPhone},</if>
+            <if test="ffEmail != null">ff_email = #{ffEmail},</if>
+            <if test="ffWebsite != null">ff_website = #{ffWebsite},</if>
+            <if test="ffImage != null">ff_image = #{ffImage},</if>
+        </trim>
+        where ffcompany_id = #{ffcompanyId}
+    </update>
+
+    <delete id="deleteBFfcompanyByFfcompanyId" parameterType="Long">
+        delete from b_ffcompany where ffcompany_id = #{ffcompanyId}
+    </delete>
+
+    <delete id="deleteBFfcompanyByFfcompanyIds" parameterType="String">
+        delete from b_ffcompany where ffcompany_id in 
+        <foreach item="ffcompanyId" collection="array" open="(" separator="," close=")">
+            #{ffcompanyId}
+        </foreach>
+    </delete>
+</mapper>

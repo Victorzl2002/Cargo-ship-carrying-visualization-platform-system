@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.containerunloading.mapper.BContainerunloadingMapper">
+    
+    <resultMap type="BContainerunloading" id="BContainerunloadingResult">
+        <result property="unloadingId"    column="unloading_id"    />
+        <result property="scheduleId"    column="schedule_id"    />
+        <result property="slotId"    column="slot_id"    />
+        <result property="pileId"    column="pile_id"    />
+        <result property="containerId"    column="container_id"    />
+        <result property="unloadingTime"    column="unloading_time"    />
+    </resultMap>
+
+    <sql id="selectBContainerunloadingVo">
+        select unloading_id, schedule_id, slot_id, pile_id, container_id, unloading_time from b_containerunloading
+    </sql>
+
+    <select id="selectBContainerunloadingList" parameterType="BContainerunloading" resultMap="BContainerunloadingResult">
+        <include refid="selectBContainerunloadingVo"/>
+        <where>  
+            <if test="scheduleId != null "> and schedule_id = #{scheduleId}</if>
+            <if test="slotId != null "> and slot_id = #{slotId}</if>
+            <if test="pileId != null "> and pile_id = #{pileId}</if>
+            <if test="containerId != null "> and container_id = #{containerId}</if>
+            <if test="unloadingTime != null "> and unloading_time = #{unloadingTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectBContainerunloadingByUnloadingId" parameterType="Long" resultMap="BContainerunloadingResult">
+        <include refid="selectBContainerunloadingVo"/>
+        where unloading_id = #{unloadingId}
+    </select>
+        
+    <insert id="insertBContainerunloading" parameterType="BContainerunloading" useGeneratedKeys="true" keyProperty="unloadingId">
+        insert into b_containerunloading
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="scheduleId != null">schedule_id,</if>
+            <if test="slotId != null">slot_id,</if>
+            <if test="pileId != null">pile_id,</if>
+            <if test="containerId != null">container_id,</if>
+            <if test="unloadingTime != null">unloading_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="scheduleId != null">#{scheduleId},</if>
+            <if test="slotId != null">#{slotId},</if>
+            <if test="pileId != null">#{pileId},</if>
+            <if test="containerId != null">#{containerId},</if>
+            <if test="unloadingTime != null">#{unloadingTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBContainerunloading" parameterType="BContainerunloading">
+        update b_containerunloading
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="scheduleId != null">schedule_id = #{scheduleId},</if>
+            <if test="slotId != null">slot_id = #{slotId},</if>
+            <if test="pileId != null">pile_id = #{pileId},</if>
+            <if test="containerId != null">container_id = #{containerId},</if>
+            <if test="unloadingTime != null">unloading_time = #{unloadingTime},</if>
+        </trim>
+        where unloading_id = #{unloadingId}
+    </update>
+
+    <delete id="deleteBContainerunloadingByUnloadingId" parameterType="Long">
+        delete from b_containerunloading where unloading_id = #{unloadingId}
+    </delete>
+
+    <delete id="deleteBContainerunloadingByUnloadingIds" parameterType="String">
+        delete from b_containerunloading where unloading_id in 
+        <foreach item="unloadingId" collection="array" open="(" separator="," close=")">
+            #{unloadingId}
+        </foreach>
+    </delete>
+</mapper>

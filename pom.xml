@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+    <groupId>com.cargo</groupId>
+    <artifactId>cargo</artifactId>
+    <version>3.8.6</version>
+
+    <name>cargo</name>
+    <description>面向智慧港口的船舶装载智能平台</description>
+    
+    <properties>
+        <cargo.version>3.8.6</cargo.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
+        <druid.version>1.2.16</druid.version>
+        <bitwalker.version>1.21</bitwalker.version>
+        <swagger.version>3.0.0</swagger.version>
+        <kaptcha.version>2.3.3</kaptcha.version>
+        <pagehelper.boot.version>1.4.6</pagehelper.boot.version>
+        <fastjson.version>2.0.41</fastjson.version>
+        <oshi.version>6.4.6</oshi.version>
+        <commons.io.version>2.13.0</commons.io.version>
+        <commons.collections.version>3.2.2</commons.collections.version>
+        <poi.version>4.1.2</poi.version>
+        <velocity.version>2.3</velocity.version>
+        <jwt.version>0.9.1</jwt.version>
+    </properties>
+
+    <!-- 依赖声明 -->
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- SpringBoot的依赖配置-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>2.5.15</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- 阿里数据库连接池 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+
+            <!-- 解析客户端操作系统、浏览器等 -->
+            <dependency>
+                <groupId>eu.bitwalker</groupId>
+                <artifactId>UserAgentUtils</artifactId>
+                <version>${bitwalker.version}</version>
+            </dependency>
+
+            <!-- pagehelper 分页插件 -->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper.boot.version}</version>
+            </dependency>
+
+            <!-- 获取系统信息 -->
+            <dependency>
+                <groupId>com.github.oshi</groupId>
+                <artifactId>oshi-core</artifactId>
+                <version>${oshi.version}</version>
+            </dependency>
+
+            <!-- Swagger3依赖 -->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-boot-starter</artifactId>
+                <version>${swagger.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>io.swagger</groupId>
+                        <artifactId>swagger-models</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- io常用工具类 -->
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons.io.version}</version>
+            </dependency>
+
+            <!-- excel工具 -->
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+
+            <!-- velocity代码生成使用模板 -->
+            <dependency>
+                <groupId>org.apache.velocity</groupId>
+                <artifactId>velocity-engine-core</artifactId>
+                <version>${velocity.version}</version>
+            </dependency>
+
+            <!-- collections工具类 -->
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>${commons.collections.version}</version>
+            </dependency>
+
+            <!-- 阿里JSON解析器 -->
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
+            <!-- Token生成与解析-->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jwt.version}</version>
+            </dependency>
+
+            <!-- 验证码 -->
+            <dependency>
+                <groupId>pro.fessional</groupId>
+                <artifactId>kaptcha</artifactId>
+                <version>${kaptcha.version}</version>
+            </dependency>
+
+            <!-- 定时任务-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-quartz</artifactId>
+                <version>${cargo.version}</version>
+            </dependency>
+
+            <!-- 代码生成-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-generator</artifactId>
+                <version>${cargo.version}</version>
+            </dependency>
+
+            <!-- 核心模块-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-framework</artifactId>
+                <version>${cargo.version}</version>
+            </dependency>
+
+            <!-- 系统模块-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-system</artifactId>
+                <version>${cargo.version}</version>
+            </dependency>
+
+            <!-- 通用工具-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-common</artifactId>
+                <version>${cargo.version}</version>
+            </dependency>
+
+            <!-- wx登录-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-user</artifactId>
+                <version>${cargo.version}</version>
+            </dependency>
+
+            <!-- 港口管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-port</artifactId>
+                <version>${cargo.version}</version>
+            </dependency>
+
+            <!-- 航线管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-route</artifactId>
+                <version>${cargo.version}</version>
+            </dependency>
+
+            <!-- 船舶公司管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-shipcompany</artifactId>
+                <version>${cargo.version}</version>
+        </dependency>
+
+            <!-- 货物信息管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-cargoinfo</artifactId>
+                <version>${cargo.version}</version>
+            </dependency>
+
+            <!-- 航运计划管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-routeschedule</artifactId>
+                <version>${cargo.version}</version>
+            </dependency>
+
+            <!-- 船舶管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-ship</artifactId>
+                <version>${cargo.version}</version>
+            </dependency>
+
+            <!-- 订单管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-order</artifactId>
+                <version>${cargo.version}</version>
+            </dependency>
+
+            <!-- 危险品识别信息管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-dangerinfo</artifactId>
+                <version>${cargo.version}</version>
+            </dependency>
+
+            <!-- 用户反馈信息管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-feedbook</artifactId>
+                <version>${cargo.version}</version>
+            </dependency>
+
+            <!-- 货代公司管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-ffcompany</artifactId>
+                <version>3.8.6</version>
+            </dependency>
+
+            <!-- 集装箱管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-container</artifactId>
+                <version>3.8.6</version>
+            </dependency>
+
+            <!-- 货物分配管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-allocation</artifactId>
+                <version>3.8.6</version>
+            </dependency>
+
+            <!-- 集装箱空间利用率管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-spacenote</artifactId>
+                <version>3.8.6</version>
+            </dependency>
+
+            <!-- 危险品知识库率管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-dangeknowledge</artifactId>
+                <version>3.8.6</version>
+            </dependency>
+
+            <!-- 货车管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-vehicle</artifactId>
+                <version>3.8.6</version>
+            </dependency>
+
+            <!-- 货堆管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-pile</artifactId>
+                <version>3.8.6</version>
+            </dependency>
+
+            <!-- 货车计划管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-task</artifactId>
+                <version>3.8.6</version>
+            </dependency>
+
+            <!-- 箱位管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-containerslot</artifactId>
+                <version>3.8.6</version>
+            </dependency>
+
+            <!-- 集装箱装配管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-containerassembly</artifactId>
+                <version>3.8.6</version>
+            </dependency>
+
+            <!-- 集装箱卸载管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-containerunloading</artifactId>
+                <version>3.8.6</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <modules>
+        <module>cargo-admin</module>
+        <module>cargo-framework</module>
+        <module>cargo-system</module>
+        <module>cargo-quartz</module>
+        <module>cargo-generator</module>
+        <module>cargo-common</module>
+        <module>cargo-user</module>
+        <module>cargo-port</module>
+        <module>cargo-route</module>
+        <module>cargo-shipcompany</module>
+        <module>cargo-cargoinfo</module>
+        <module>cargo-routeschedule</module>
+        <module>cargo-order</module>
+        <module>cargo-ship</module>
+        <module>cargo-dangerinfo</module>
+        <module>cargo-feedbook</module>
+        <module>cargo-ffcompany</module>
+        <module>cargo-container</module>
+        <module>cargo-allocation</module>
+        <module>cargo-spacenote</module>
+        <module>cargo-dangerknowledge</module>
+        <module>cargo-vehicle</module>
+        <module>cargo-pile</module>
+        <module>cargo-task</module>
+        <module>cargo-containerslot</module>
+        <module>cargo-containerassembly</module>
+        <module>cargo-containerunloading</module>
+    </modules>
+    <packaging>pom</packaging>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>public</id>
+            <name>aliyun nexus</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>public</id>
+            <name>aliyun nexus</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>
