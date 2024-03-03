@@ -1,0 +1,375 @@
+<!--
+ * @Author: Victorzl
+ * @Date: 2024-03-03 10:01:15
+ * @LastEditors: Victorzl
+ * @LastEditTime: 2024-03-03 10:15:04
+ * @Description: 请填写简介
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>港口险情与救援记录</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: white;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input[type="date"],
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .record-cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+
+    .record-card {
+      width: calc(25%);
+      margin-bottom: 20px;
+      margin-right: 20px;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      position: relative;
+    }
+
+    .record-card p {
+      margin: 5px 0;
+    }
+
+    .delete-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background-color: #ff0000;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      padding: 5px;
+      cursor: pointer;
+    }
+
+    .add-btn {
+      width: calc(50% - 20px);
+      margin-bottom: 20px;
+      margin-right: 20px;
+      padding: 15px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+      padding-top: 60px;
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      border-radius: 8px;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .option-container {
+      margin-bottom: 10px;
+    }
+
+    .option-container label {
+      margin-right: 10px;
+    }
+
+    .option-container select {
+      width: calc(50% - 5px);
+    }
+
+    .option-container input {
+      width: calc(50% - 5px);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h2>港口险情与救援记录</h2>
+    <div class="form-group">
+      <label for="queryDate">选择日期：</label>
+      <input type="date" id="queryDate" name="queryDate" value="" required>
+      <button onclick="queryRecords()">查询</button>
+    </div>
+
+    <div class="record-cards" id="recordCards">
+      <!-- 记录列表将在查询时动态生成 -->
+    </div>
+
+    <button class="add-btn" onclick="openModal()">添加记录</button>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h3>添加记录</h3>
+        <label for="recordDate">日期：</label>
+        <input type="date" id="recordDate" name="recordDate" required><br>
+        <label for="recordType">记录类型：</label>
+        <select id="recordType" name="recordType">
+          <option value="险情">险情</option>
+          <option value="救援">救援</option>
+        </select><br>
+        <label for="recordDetail1">地点：</label>
+        <input type="text" id="recordDetail1" name="recordDetail1" required><br>
+        <label for="recordDetail2">报告人：</label>
+        <input type="text" id="recordDetail2" name="recordDetail2" required><br>
+        <div id="incidentField" class="option-container" style="display: none;">
+          <label for="recordDetail3">事故：</label>
+          <input type="text" id="recordDetail3" name="recordDetail3" required><br>
+        </div>
+        <div id="actionField" class="option-container" style="display: none;">
+          <label for="recordDetail4">措施：</label>
+          <input type="text" id="recordDetail4" name="recordDetail4" required><br>
+        </div>
+        <button onclick="addRecord()">添加记录</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 模拟本地存储的险情记录和救援记录
+    let dangerRecords = [
+      { id: 1, date: '2024-03-03', location: '港口A', reporter: '巡逻员1', incident: '火灾' },
+      { id: 2, date: '2024-03-03', location: '港口B', reporter: '巡逻员2', incident: '爆炸' },
+      { id: 3, date: '2024-03-03', location: '港口C', reporter: '巡逻员3', incident: '油污污染' },
+    ];
+
+    let rescueRecords = [
+      { id: 1, date: '2024-03-03', time: '10:00', action: '火灾扑救', rescuer: '消防队' },
+      { id: 2, date: '2024-03-03', time: '12:00', action: '人员疏散', rescuer: '应急办' },
+      { id: 3, date: '2024-03-03', time: '14:00', action: '油污清理', rescuer: '环保队' },
+    ];
+
+    // 显示指定日期的记录
+    function queryRecords() {
+      const date = document.getElementById('queryDate').value;
+      const dangerRecordsByDate = getDangerRecords(date);
+      const rescueRecordsByDate = getRescueRecords(date);
+      displayRecords(dangerRecordsByDate, rescueRecordsByDate);
+    }
+
+    // 获取指定日期的险情记录
+    function getDangerRecords(date) {
+      return dangerRecords.filter(record => record.date === date);
+    }
+
+    // 获取指定日期的救援记录
+    function getRescueRecords(date) {
+      return rescueRecords.filter(record => record.date === date);
+    }
+
+    // 显示记录
+    function displayRecords(dangerRecords, rescueRecords) {
+      const recordCardsContainer = document.getElementById('recordCards');
+      recordCardsContainer.innerHTML = '';
+
+      // 显示险情记录
+      dangerRecords.forEach(record => {
+        const recordCard = createRecordCard(record.id, record.date, record.location, record.reporter, record.incident, "险情");
+        recordCardsContainer.appendChild(recordCard);
+      });
+
+      // 显示救援记录
+      rescueRecords.forEach(record => {
+        const recordCard = createRecordCard(record.id, record.date, record.time, record.action, record.rescuer, "救援");
+        recordCardsContainer.appendChild(recordCard);
+      });
+    }
+
+    // 创建记录卡片
+    function createRecordCard(id, date, detail1, detail2, detail3, type) {
+      const recordCard = document.createElement('div');
+      recordCard.classList.add('record-card');
+      recordCard.innerHTML = `
+      <p>类型：${type}</p>
+      <p>日期：${date}</p>
+      <p>地点：${detail1}</p>
+      <p>报告人：${detail2}</p>
+      <p>${type === '险情' ? '事故' : '措施'}：${detail3}</p>
+      <button class="delete-btn" onclick="deleteRecord(${id})">删除</button>
+    `;
+      return recordCard;
+    }
+
+    // 添加记录
+    function addRecord() {
+      const date = document.getElementById('recordDate').value;
+      const type = document.getElementById('recordType').value;
+      const location = document.getElementById('recordDetail1').value;
+      const reporter = document.getElementById('recordDetail2').value;
+      const detail3 = document.getElementById('recordDetail3').value;
+      const detail4 = document.getElementById('recordDetail4').value;
+
+      // Add the new record to dangerRecords or rescueRecords array
+      const newRecord = {
+        id: (type === '险情' ? (dangerRecords.length > 0 ? dangerRecords[dangerRecords.length - 1].id + 1 : 1) : (rescueRecords.length > 0 ? rescueRecords[rescueRecords.length - 1].id + 1 : 1)),
+        date: date,
+        location: location,
+        reporter: reporter,
+        incident: type === '险情' ? detail3 : '',
+        action: type === '救援' ? detail3 : '',
+        rescuer: type === '救援' ? detail4 : ''
+      };
+
+      // Determine whether it's a danger record or rescue record
+      if (type === '险情') {
+        dangerRecords.push(newRecord);
+      } else {
+        rescueRecords.push(newRecord);
+      }
+
+      closeModal(); // Close the modal
+      queryRecords(); // Refresh the records display
+    }
+
+    // 删除记录
+    function deleteRecord(id) {
+      // Find index of the record in dangerRecords or rescueRecords array
+      const dangerIndex = dangerRecords.findIndex(record => record.id === id);
+      const rescueIndex = rescueRecords.findIndex(record => record.id === id);
+
+      // Remove the record from the appropriate array
+      if (dangerIndex !== -1) {
+        dangerRecords.splice(dangerIndex, 1);
+      } else if (rescueIndex !== -1) {
+        rescueRecords.splice(rescueIndex, 1);
+      }
+
+      queryRecords(); // Refresh the records display
+    }
+
+    // Modal functions
+    function openModal() {
+      document.getElementById('myModal').style.display = 'block';
+      const recordType = document.getElementById('recordType').value;
+      showOptionFields(recordType);
+    }
+
+    function closeModal() {
+      document.getElementById('myModal').style.display = 'none';
+    }
+
+    // Close the modal if user clicks outside of it
+    window.onclick = function (event) {
+      const modal = document.getElementById('myModal');
+      if (event.target == modal) {
+        modal.style.display = 'none';
+      }
+    }
+
+    // Show additional fields based on selected record type
+    function showOptionFields(type) {
+      const incidentField = document.getElementById('incidentField');
+      const actionField = document.getElementById('actionField');
+      if (type === '险情') {
+        incidentField.style.display = 'block';
+        actionField.style.display = 'none';
+      } else {
+        incidentField.style.display = 'none';
+        actionField.style.display = 'block';
+      }
+    }
+  </script>
+
+</body>
+
+</html>

@@ -3,13 +3,13 @@
  */
 
 var map;
-map = new BMap.Map("divMap");    // 创建Map实例
-map.centerAndZoom(new BMap.Point(119.451609, 34.750033), 13);  // 初始化地图,设置中心点坐标和地图级别
+map = new BMap.Map("divMap", { mapType: BMAP_HYBRID_MAP });    // 创建Map实例
+map.centerAndZoom(new BMap.Point(119.451609, 34.750033), 14);  // 初始化地图,设置中心点坐标和地图级别
 //添加地图类型控件
 map.addControl(new BMap.MapTypeControl({
     mapTypes: [
+        BMAP_HYBRID_MAP,
         BMAP_NORMAL_MAP,
-        BMAP_HYBRID_MAP
     ]
 }));
 map.setCurrentCity("连云港");          // 设置地图显示的城市 此项是必须设置的

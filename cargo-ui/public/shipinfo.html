@@ -1,0 +1,100 @@
+<!--
+ * @Author: Victorzl
+ * @Date: 2024-03-03 11:28:34
+ * @LastEditors: Victorzl
+ * @LastEditTime: 2024-03-03 11:35:07
+ * @Description: 请填写简介
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>货轮信息</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to bottom right, #b3c6ff, #ffe6b3);
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      display: flex;
+      justify-content: space-between;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .card {
+      width: 45%;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      color: #333;
+      font-size: 20px;
+    }
+
+    .card p {
+      margin: 5px 0;
+      color: #666;
+      font-size: 16px;
+    }
+
+    .card p strong {
+      color: #333;
+    }
+
+    /* 添加间隔 */
+    .container .card {
+      margin-right: 10px;
+    }
+
+    /* 最后一个卡片不添加右边距 */
+    .container .card:last-child {
+      margin-right: 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="card">
+      <p><strong>船名:</strong> 复兴号</p>
+      <p><strong>承重:</strong> 4000吨</p>
+      <p><strong>吃水:</strong> 12米</p>
+      <p><strong>MMSI:</strong> 1234567</p>
+      <p><strong>船籍:</strong>上海</p>
+      <p><strong>航运计划:</strong>前往厦门</p>
+    </div>
+    <div class="card">
+      <p><strong>船名:</strong> 航海号</p>
+      <p><strong>承重:</strong> 3000吨</p>
+      <p><strong>吃水:</strong> 6米</p>
+      <p><strong>MMSI:</strong> 987654321</p>
+      <p><strong>船籍:</strong> 连云港</p>
+      <p><strong>航运计划:</strong> 前往上海</p>
+    </div>
+  </div>
+
+</body>
+
+</html>

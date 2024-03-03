@@ -1,15 +1,8 @@
 <!--
  * @Author: Victorzl
- * @Date: 2024-01-21 20:04:56
- * @LastEditors: Victorzl
- * @LastEditTime: 2024-02-13 09:59:28
- * @Description: 请填写简介
--->
-<!--
- * @Author: Victorzl
  * @Date: 2023-09-22 20:27:04
  * @LastEditors: Victorzl
- * @LastEditTime: 2024-02-12 11:35:34
+ * @LastEditTime: 2024-03-03 13:59:56
  * @Description: 智慧港口可视化平台（Web 3D）
 -->
 <template>
@@ -20,7 +13,6 @@
     <div class="wrapper">
       <div class="content">
         <div id="three">
-          <!-- <button id="down">下载</button> -->
           <div class="progress-bar" v-if="loading">
             <div
               class="progress"
@@ -174,22 +166,75 @@
         <div class="col-b">
           <button id="" @click.stop="showinfo">综合态势</button>
           <button id="" @click.stop="changeeyecar">货车寻址</button>
-          <button id="" @click.stop="changeeyecontainer">集装箱调度</button>
+          <button id="" @click.stop="changeeyecontainer">龙门吊</button>
+          <button id="" @click.stop="dangershow">险情分析</button>
+          <button id="" @click.stop="huiduishow">货堆计划</button>
+          <button id="" @click.stop="huiwushow">货物分配</button>
+          <button id="" @click.stop="changehuolun">货轮信息</button>
+          <button @click.stop="toggleDayNightMode">白天夜晚</button>
           <button id="down">实时拍照</button>
         </div>
-        <!-- <div id="tag">标签内容</div> -->
         <div
           v-if="showInfo"
           class="info-box"
           :style="{ top: infoBoxTop + 'px', left: infoBoxLeft + 'px' }"
         >
-          <p>{{ selectedObject.name }}</p>
-          <p>
-            Position: {{ selectedObject.position.x }},
-            {{ selectedObject.position.y }}, {{ selectedObject.position.z }}
-          </p>
-          <!-- 其他信息 -->
+          <table>
+            <tr>
+              <th>属性</th>
+              <th>数值</th>
+            </tr>
+            <tr>
+              <td>名称</td>
+              <td>{{ selectedObject.name }}</td>
+            </tr>
+            <tr>
+              <td>位置X</td>
+              <td>{{ selectedObject.parent.position.x }}</td>
+            </tr>
+            <tr>
+              <td>位置Y</td>
+              <td>{{ selectedObject.parent.position.y }}</td>
+            </tr>
+            <tr>
+              <td>位置Z</td>
+              <td>{{ selectedObject.parent.position.z }}</td>
+            </tr>
+            <tr>
+              <td>状态</td>
+              <td>正常运行</td>
+            </tr>
+          </table>
         </div>
+        <div class="dangerrecord" v-if="dangerisshow">
+          <iframe
+            src="/dangerrecord.html"
+            width="100%"
+            height="100%"
+          ></iframe>
+        </div>
+         <div class="dangerrecord" v-if="huiduiinfo">
+          <iframe
+            src="/trucksplanviusal/index.html"
+            width="100%"
+            height="100%"
+          ></iframe>
+        </div>
+         <div class="dangerrecord" v-if="huowuinfo">
+          <iframe
+            src="/containerviusal/index.html"
+            width="100%"
+            height="100%"
+          ></iframe>
+        </div>
+         <div class="huolunrecord" v-if="huoluninfo">
+          <iframe
+            src="/shipinfo.html"
+            width="100%"
+            height="100%"
+          ></iframe>
+        </div>
+      </div>
       </div>
     </div>
   </div>
@@ -207,7 +252,6 @@ import * as TWEEN from '@tweenjs/tween.js';
 // 引入CSS2渲染器CSS2DRenderer和CSS2模型对象CSS2DObject
 import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
-import { color } from 'echarts'
 
 
 export default {
@@ -222,6 +266,8 @@ export default {
       mixer: null,
       clock: new THREE.Clock(),
       animations: null,
+      ambientLight: null,
+      directionalLight: null,
       loading: true,
       loadingProgress: 0,
       loadingStatus: '',
@@ -234,7 +280,14 @@ export default {
       showInfo: false, // 控制信息框显示
       selectedObject: null, // 存储选中的模型对象
       infoBoxTop: 0, // 信息框的 top 坐标
-      infoBoxLeft: 0 // 信息框的 left 坐标
+      infoBoxLeft: 0, // 信息框的 left 坐标
+      dangerisshow: false,
+      huiduiinfo: false,
+      huowuinfo: false,
+      huoluninfo: false,
+      dayNightMode: false, // 标识当前是白天还是夜晚模式，初始值为白天模式
+      weatherEffect: false,
+      rainParticles: null
     }
   },
   mounted() {
@@ -242,13 +295,14 @@ export default {
     this.initScene()
     this.initCamera()
     this.initRenderer()
+    this.initCSS2DRenderer()
     this.initPostProcessing()
-    this.setupOutlinePass();
+
     // Add lights to the scene
     this.addLights()
 
     // Load the 3D model asynchronously
-    this.loadModelAsync('/cargo1.glb').then(() => {
+    this.loadModelAsync('/cargo3.glb').then(() => {
       // Add coordinate axes helper
       // this.addAxesHelper();
       this.drawLine();
@@ -309,10 +363,19 @@ export default {
       this.renderer.setClearColor(0xffffff, 0)
       this.renderer.outputEncoding = THREE.sRGBEncoding;
     },
+    initCSS2DRenderer() {
+      // 创建一个新的CSS2DRenderer实例
+      this.css2dRenderer = new CSS2DRenderer();
+      // 设置渲染器的大小
+      this.css2dRenderer.setSize(window.innerWidth, window.innerHeight);
+      // 将渲染器的DOM元素添加到页面中
+      document.getElementById('three').appendChild(this.css2dRenderer.domElement);
+    },
     //增加灯光
     addLights() {
       const ambientLight = new THREE.AmbientLight(0xffffff, 2.5)
       this.scene.add(ambientLight)
+      this.ambientLight = ambientLight;
       const directionalLight = new THREE.DirectionalLight(0xffffff, 3)
       directionalLight.castShadow = true
       directionalLight.shadow.mapSize.height = 512 * 2
@@ -320,6 +383,7 @@ export default {
       directionalLight.shadow.bias = 0.05
       directionalLight.shadow.normalBias = 0.05
       this.scene.add(directionalLight)
+      this.directionalLight = directionalLight
     },
     //初始化模型加载
     loadModelAsync(modelPath) {
@@ -435,15 +499,6 @@ export default {
       };
       animateLoop();
     },
-    setupOutlinePass() {
-      this.outlinePass = new OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), this.scene, this.camera);
-      // 设置 OutlinePass 的参数
-      this.outlinePass.edgeStrength = 5; // 轮廓线的强度
-      this.outlinePass.edgeGlow = 0.8; // 轮廓线的光晕强度
-      this.outlinePass.edgeThickness = 2; // 轮廓线的厚度
-      this.outlinePass.pulsePeriod = 0; // 轮廓线的脉动周期，设置为 0 可以关闭脉动效
-
-    },
     //点击模型
     onDocumentClick(event) {
       const mouse = new THREE.Vector2();
@@ -455,31 +510,19 @@ export default {
       raycaster.setFromCamera(mouse, this.camera);
       // 检测交点
       const intersects = raycaster.intersectObjects([this.models], true);
-      console.log(intersects);
-
       if (intersects.length > 0) {
         // 处理选择
         this.selectedObject = intersects[0].object;
-        console.log(intersects[0]);
+        console.log(intersects[0].object);
         // 计算信息框位置
         const point = intersects[0].point.clone(); // 拷贝交点坐标
         point.applyMatrix4(this.selectedObject.matrixWorld); // 将坐标转换为世界坐标系
         const screenPos = this.worldToScreen(point); // 将世界坐标系转换为屏幕坐标系
         this.infoBoxTop = screenPos.y;
         this.infoBoxLeft = screenPos.x;
-
         // 显示信息框
         this.showInfo = true;
       }
-
-      // if (intersects.length > 0) {
-      //   // 处理选择，例如为所选对象添加轮廓效果
-      //   const selectedObject = intersects[0].object;
-      //   this.selectedObject = selectedObject;
-      //   // 切换所选对象的材质颜色为黄色
-      //   // 切换所选对象的轮廓效果
-      //   this.toggleOutlineEffect(selectedObject);
-      // }
     },
     worldToScreen(position) {
       const vector = position.clone();
@@ -489,22 +532,6 @@ export default {
       vector.x = (vector.x + 1) / 2 * width;
       vector.y = -(vector.y - 1) / 2 * height;
       return { x: vector.x, y: vector.y };
-    },
-    // 切换所选对象的轮廓效果的函数
-    toggleOutlineEffect(selectedObject) {
-      if (!this.outlinePass) {
-        console.error("OutlinePass is not initialized.");
-        return;
-      }
-      if (this.outlinePass.selectedObjects.includes(selectedObject)) {
-        // 从选择中移除对象
-        this.outlinePass.selectedObjects = this.outlinePass.selectedObjects.filter(obj => obj !== selectedObject);
-      } else {
-        // 将对象添加到选择中
-        this.outlinePass.selectedObjects.push(selectedObject);
-      }
-      // 更新效果通道
-      this.composer.render(); // 假设您使用了 EffectComposer 来渲染场景
     },
     // 初始化后期处理
     initPostProcessing() {
@@ -521,11 +548,63 @@ export default {
       this.composer = composer;
       this.outlinePass = outlinePass;
     },
-    showModelInfo(modelId) {
+    toggleDayNightMode() {
+      // 切换白天夜晚模式
+      this.dayNightMode = !this.dayNightMode; // 假设dayNightMode是一个data中的变量，用于标识当前是白天还是夜晚模式
+      this.scene.remove(this.ambientLight);
+      // 移除定向光
+      this.scene.remove(this.directionalLight);
+      // 根据白天夜晚模式调整光照参数
+      if (this.dayNightMode) {
+        // 添加其他夜晚模式下的光源等设置
+        // 环境光
+        this.scene.remove(this.ambientLight);
+        // 移除定向光
+        this.scene.remove(this.directionalLight);
+        this.ambientLight = new THREE.AmbientLight(0x404040); // 较暗的环境光
+        this.scene.add(this.ambientLight);
+        // 方向光
+        this.directionalLight = new THREE.DirectionalLight(0x404040, 0.5); // 较暗的定向光
+        this.directionalLight.position.set(1, 1, 1);
+        this.scene.add(this.directionalLight);
+      } else {
+        // 白天模式
+        // 恢复其他白天模式下的光源等设置
+        const ambientLight = new THREE.AmbientLight(0xffffff, 2.5)
+        this.scene.add(ambientLight)
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 3)
+        directionalLight.castShadow = true
+        directionalLight.shadow.mapSize.height = 512 * 2
+        directionalLight.shadow.mapSize.width = 512 * 2
+        directionalLight.shadow.bias = 0.05
+        directionalLight.shadow.normalBias = 0.05
+        this.directionalLight = directionalLight;
+        this.scene.add(directionalLight)
+      }
     },
     changeeyecontainer() {
       // 定义目标相机位置和焦点位置
       const targetPosition = new THREE.Vector3(-2.5, 0.5, 0); // 新的相机位置
+      const targetLookAt = new THREE.Vector3(0, 0, 0); // 新的焦点位置
+      // 创建 Tween 对象来控制相机位置的动画过渡
+      new TWEEN.Tween(this.camera.position)
+        .to(targetPosition, 1000) // 持续时间为1秒
+        .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动函数控制动画过渡
+        .onUpdate(() => {
+          // 在动画更新时调用，以便让相机在动画过程中实时更新位置
+          this.camera.lookAt(targetLookAt); // 更新相机焦点位置
+        })
+        .start(); // 启动动画
+      // 创建 Tween 对象来控制相机焦点的动画过渡
+      new TWEEN.Tween(this.controls.target)
+        .to(targetLookAt, 1000) // 持续时间为1秒
+        .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动函数控制动画过渡
+        .start(); // 启动动画
+    },
+    changehuolun() {
+      this.huoluninfo = !this.huoluninfo;
+      // 定义目标相机位置和焦点位置
+      const targetPosition = new THREE.Vector3(0, 0.5, 3); // 新的相机位置
       const targetLookAt = new THREE.Vector3(0, 0, 0); // 新的焦点位置
       // 创建 Tween 对象来控制相机位置的动画过渡
       new TWEEN.Tween(this.camera.position)
@@ -551,7 +630,6 @@ export default {
           if (child.name === 'visualcar') {
             const truckPosition = new THREE.Vector3();
             child.getWorldPosition(truckPosition);
-
             // 设置相机的位置为卡车位置加上适当的偏移量
             const offsetX = 0.1;
             const offsetY = 0.08;
@@ -591,6 +669,32 @@ export default {
       // 开始动画循环
       animateLoop();
     },
+    dangershow() {
+      this.dangerisshow = !this.dangerisshow
+      // 定义目标相机位置和焦点位置
+      const targetPosition = new THREE.Vector3(1.24, 0.32, 1); // 新的相机位置
+      const targetLookAt = new THREE.Vector3(1.24, 0, -4); // 新的焦点位置
+      // 创建 Tween 对象来控制相机位置的动画过渡
+      new TWEEN.Tween(this.camera.position)
+        .to(targetPosition, 1000) // 持续时间为1秒
+        .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动函数控制动画过渡
+        .onUpdate(() => {
+          // 在动画更新时调用，以便让相机在动画过程中实时更新位置
+          this.camera.lookAt(targetLookAt); // 更新相机焦点位置
+        })
+        .start(); // 启动动画
+      // 创建 Tween 对象来控制相机焦点的动画过渡
+      new TWEEN.Tween(this.controls.target)
+        .to(targetLookAt, 1000) // 持续时间为1秒
+        .easing(TWEEN.Easing.Quadratic.InOut) // 使用缓动函数控制动画过渡
+        .start(); // 启动动画
+    },
+    huiduishow() {
+      this.huiduiinfo = !this.huiduiinfo
+    },
+    huiwushow() {
+      this.huowuinfo = !this.huowuinfo
+    },
     showinfo() {
       this.isshow = !this.isshow
       const targetPosition = new THREE.Vector3(0, 1, -2.5); // 新的相机位置
@@ -629,7 +733,7 @@ export default {
           trigger: 'axis'
         },
         legend: {
-          data: ['码头人员', '装配部']
+          data: ['码头人员', '装配部', '巡逻员']
         },
         grid: {
           left: '1%',
@@ -667,6 +771,14 @@ export default {
             stack: 'Total',
             data: [220, 182, 191, 234],
             itemStyle: { color: 'red' }
+          }
+          ,
+          {
+            name: '巡逻员',
+            type: 'line',
+            stack: 'Total',
+            data: [220, 182, 191, 234],
+            itemStyle: { color: 'yellow' }
           }
         ]
       });
@@ -839,9 +951,9 @@ header {
 }
 .col-b button {
   flex: 1;
-  width: 100px;
-  height: 40px;
-  line-height: 40px;
+  width: 80px;
+  height: 30px;
+  line-height: 30px;
   margin-right: 20px;
   /* 添加背景颜色和边框 */
   background-color: rgba(52, 152, 219, 0.5);
@@ -937,7 +1049,7 @@ header {
   box-sizing: border-box;
 }
 .xpanel-wrapper {
-  height: 100%;
+  height: 116%;
 }
 .xpanel-wrapper-25 {
   height: 25%;
@@ -1149,35 +1261,64 @@ header {
 }
 .info-box {
   position: absolute;
-  background: linear-gradient(to right, #4facfe, #00f2fe); /* 渐变背景 */
+  background-color: rgba(200, 200, 200, 0.8); /* 灰色透明背景 */
   border-radius: 10px; /* 边框圆角 */
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* 阴影效果 */
   padding: 20px; /* 内边距 */
   color: #333333; /* 文本颜色 */
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* 字体 */
-  animation: fadeIn 0.5s ease-in-out; /* 渐现动画 */
+  opacity: 0.9; /* 透明度 */
 }
 
-.info-box p {
-  margin: 0; /* 段落边距 */
-  line-height: 1.5; /* 行高 */
+.info-box table {
+  width: 100%; /* 表格宽度100% */
+  border-collapse: collapse; /* 合并边框 */
 }
 
-.info-box p:first-child {
-  font-size: 18px; /* 第一个段落字体大小 */
-  font-weight: bold; /* 第一个段落加粗 */
+.info-box th,
+.info-box td {
+  padding: 10px; /* 单元格内边距 */
+  text-align: left; /* 文本左对齐 */
 }
 
-.info-box p + p {
-  margin-top: 10px; /* 第二个段落上边距 */
+.info-box tr:nth-child(odd) {
+  background-color: rgba(255, 255, 255, 0.5); /* 奇数行背景色 */
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.info-box tr:nth-child(even) {
+  background-color: rgba(200, 200, 200, 0.5); /* 偶数行背景色 */
+}
+
+.info-box tr th,
+.info-box tr td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5); /* 每行下横线 */
+}
+.dangerrecord {
+  position: absolute;
+  width: 980px;
+  height: 500px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  /* background-color: rgba(200, 200, 200, 0.8); 灰色透明背景 */
+  border-radius: 10px; /* 边框圆角 */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+  color: #333333; /* 文本颜色 */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* 字体 */
+  opacity: 0.9; /* 透明度 */
+}
+.huolunrecord {
+  position: absolute;
+  width: 500px;
+  height: 250px;
+  left: 50%;
+  top: 30px;
+  transform: translateX(-50%);
+  /* background-color: rgba(200, 200, 200, 0.8); 灰色透明背景 */
+  border-radius: 10px; /* 边框圆角 */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+  color: #333333; /* 文本颜色 */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* 字体 */
+  opacity: 0.9; /* 透明度 */
 }
 </style>
