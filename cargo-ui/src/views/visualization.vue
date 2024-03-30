@@ -2,7 +2,7 @@
  * @Author: Victorzl
  * @Date: 2023-09-22 20:27:04
  * @LastEditors: Victorzl
- * @LastEditTime: 2024-03-03 13:59:56
+ * @LastEditTime: 2024-03-30 16:08:05
  * @Description: 智慧港口可视化平台（Web 3D）
 -->
 <template>
@@ -103,7 +103,7 @@
             <div class="xpanel xpanel-r-m">
               <div class="title">实时天气</div>
               <div class="danger_depart_box" v-if="!loading">
-                <div class="d_title">天气数据</div>
+                <div class="d_title">{{city}}</div>
                 <ul class="danger_depart">
                   <li
                     class="danger_ico"
@@ -113,7 +113,7 @@
                     "
                   ></li>
                   <li class="data_name">天气</li>
-                  <li class="data data01">多云</li>
+                  <li class="data data01">{{weather}}</li>
                 </ul>
                 <ul class="danger_depart">
                   <li
@@ -123,8 +123,8 @@
                       background-position-x: 0px;
                     "
                   ></li>
-                  <li class="data_name">空气质量</li>
-                  <li class="data data01">22</li>
+                  <li class="data_name">风向</li>
+                  <li class="data data01">{{winddirection}}</li>
                 </ul>
                 <ul class="danger_depart danger_depart01">
                   <li
@@ -135,7 +135,7 @@
                     "
                   ></li>
                   <li class="data_name">温度</li>
-                  <li class="data data01">13</li>
+                  <li class="data data01">{{temperature}}</li>
                 </ul>
                 <ul class="danger_depart danger_depart01">
                   <li
@@ -146,7 +146,7 @@
                     "
                   ></li>
                   <li class="data_name">湿度</li>
-                  <li class="data data01">85</li>
+                  <li class="data data01">{{ humidity }}%</li>
                 </ul>
               </div>
             </div>
@@ -251,6 +251,7 @@ import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass.js'
 import * as TWEEN from '@tweenjs/tween.js';
 // 引入CSS2渲染器CSS2DRenderer和CSS2模型对象CSS2DObject
 import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
+import axios from 'axios'
 
 
 
@@ -287,7 +288,13 @@ export default {
       huoluninfo: false,
       dayNightMode: false, // 标识当前是白天还是夜晚模式，初始值为白天模式
       weatherEffect: false,
-      rainParticles: null
+      rainParticles: null,
+      city: "",
+      humidity: "",
+      time: "",
+      temperature: "",
+      winddirection: "",
+      weather: ""
     }
   },
   mounted() {
@@ -301,12 +308,12 @@ export default {
     // Add lights to the scene
     this.addLights()
 
-    // Load the 3D model asynchronously
-    this.loadModelAsync('/cargo3.glb').then(() => {
+    // Load the 3D model asynchronously  
+    this.loadModelAsync('/cargo1.glb').then(() => {
       // Add coordinate axes helper
       // this.addAxesHelper();
       this.drawLine();
-
+      this.getweatherinfo();
       // Add trackball controls for camera manipulation
       this.initTrackballControls();
       // Start the animation loop
@@ -333,6 +340,18 @@ export default {
     document.addEventListener('click', (event) => this.onDocumentClick(event), false);
   },
   methods: {
+    //实时获取天气
+    getweatherinfo() {
+      axios.get("https://restapi.amap.com/v3/weather/weatherInfo?key=c98e50643620305925d2a21739d3a42a&city=320703").then(res => {
+        let winfo = res.data.lives[0];
+        this.city = winfo.city;
+        this.humidity = winfo.humidity;
+        this.time = winfo.time;
+        this.temperature = winfo.temperature;
+        this.weather = winfo.weather;
+        this.winddirection = winfo.winddirection;
+      })
+    },
     //初始化场景
     initScene() {
       this.scene = new THREE.Scene()
@@ -513,7 +532,6 @@ export default {
       if (intersects.length > 0) {
         // 处理选择
         this.selectedObject = intersects[0].object;
-        console.log(intersects[0].object);
         // 计算信息框位置
         const point = intersects[0].point.clone(); // 拷贝交点坐标
         point.applyMatrix4(this.selectedObject.matrixWorld); // 将坐标转换为世界坐标系

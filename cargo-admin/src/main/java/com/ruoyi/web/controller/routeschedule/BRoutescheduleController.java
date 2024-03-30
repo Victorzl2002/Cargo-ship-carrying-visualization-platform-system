@@ -90,7 +90,9 @@ public class BRoutescheduleController extends BaseController
 
     @GetMapping("/port/scheduleinfo")
     public List<BRouteschedule> getscheduleinfo(BRouteschedule bRouteschedule){
+        System.out.println(bRouteschedule);
         List<BRouteschedule> schedulelist = bRoutescheduleService.selectBRoutescheduleListdate(bRouteschedule);
+        System.out.println(schedulelist);
         return schedulelist;
     }
 

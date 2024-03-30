@@ -2,7 +2,7 @@
  * @Author: Victorzl
  * @Date: 2024-01-06 20:06:21
  * @LastEditors: Victorzl
- * @LastEditTime: 2024-02-07 11:56:50
+ * @LastEditTime: 2024-03-04 16:11:04
  * @Description: 请填写简介
 -->
 <template>
@@ -138,7 +138,7 @@ export default {
     rebuild() {
       const formData = new FormData()
       formData.append('name', this.$refs.Input.files[0])
-      const url = 'http://127.0.0.1:5000/danger'
+      const url = 'http://127.0.0.1:4000/danger'
       axios.post(url, formData, {
         headers: {
           'Content-Type': 'multipart/form-data; boundary=--------------------------823765295301561537730103',

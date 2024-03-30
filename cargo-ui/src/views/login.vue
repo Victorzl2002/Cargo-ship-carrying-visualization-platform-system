@@ -6,7 +6,7 @@
       :rules="loginRules"
       class="login-form"
     >
-      <h3 class="title">面向智慧港口的船舶装载智能平台</h3>
+      <h3 class="title">面向智慧航运的智能港口数字孪生一体化平台</h3>
       <el-form-item prop="username">
         <el-input
           v-model="loginForm.username"

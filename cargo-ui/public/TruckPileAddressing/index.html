@@ -152,7 +152,7 @@
         const formData = new FormData();
         formData.append('yamlFile', fileInput.files[0]);
 
-        const response = await fetch('http://localhost:4000/run_cbs', {
+        const response = await fetch('http://localhost:5000/run_cbs', {
           method: 'POST',
           body: formData
         });
