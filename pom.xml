@@ -316,6 +316,34 @@
                 <version>3.8.6</version>
             </dependency>
 
+            <!-- 硬件终端管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-terminal1</artifactId>
+                <version>3.8.6</version>
+            </dependency>
+
+            <!-- 硬件终端管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-terminalmanage</artifactId>
+                <version>3.8.6</version>
+            </dependency>
+
+            <!-- 司机管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-driver</artifactId>
+                <version>3.8.6</version>
+            </dependency>
+
+            <!-- 货车计划管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-transplan</artifactId>
+                <version>3.8.6</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -347,6 +375,10 @@
         <module>cargo-containerslot</module>
         <module>cargo-containerassembly</module>
         <module>cargo-containerunloading</module>
+        <module>cargo-terminal1</module>
+        <module>cargo-driver</module>
+        <module>cargo-transplan</module>
+        <module>cargo-terminalmanage</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -364,30 +396,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <repositories>
-        <repository>
-            <id>public</id>
-            <name>aliyun nexus</name>
-            <url>https://maven.aliyun.com/repository/public</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>public</id>
-            <name>aliyun nexus</name>
-            <url>https://maven.aliyun.com/repository/public</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
-
 </project>

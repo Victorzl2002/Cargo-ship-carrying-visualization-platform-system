@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.driver.mapper.BDriverMapper">
+    
+    <resultMap type="BDriver" id="BDriverResult">
+        <result property="driverId"    column="driver_id"    />
+        <result property="driverName"    column="driver_name"    />
+        <result property="identitiyNumber"    column="identitiy_number"    />
+        <result property="licenseNumber"    column="license_number"    />
+        <result property="driverPhone"    column="driver_phone"    />
+        <result property="drivingStatus"    column="driving_status"    />
+        <result property="onlineStatus"    column="online_status"    />
+        <result property="dirverCompany"    column="dirver_company"    />
+    </resultMap>
+
+    <sql id="selectBDriverVo">
+        select driver_id, driver_name, identitiy_number, license_number, driver_phone, driving_status, online_status, dirver_company from b_driver
+    </sql>
+
+    <select id="selectBDriverList" parameterType="BDriver" resultMap="BDriverResult">
+        <include refid="selectBDriverVo"/>
+        <where>  
+            <if test="driverName != null  and driverName != ''"> and driver_name like concat('%', #{driverName}, '%')</if>
+            <if test="identitiyNumber != null  and identitiyNumber != ''"> and identitiy_number = #{identitiyNumber}</if>
+            <if test="licenseNumber != null  and licenseNumber != ''"> and license_number = #{licenseNumber}</if>
+            <if test="driverPhone != null  and driverPhone != ''"> and driver_phone = #{driverPhone}</if>
+            <if test="drivingStatus != null  and drivingStatus != ''"> and driving_status = #{drivingStatus}</if>
+            <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
+            <if test="dirverCompany != null  and dirverCompany != ''"> and dirver_company = #{dirverCompany}</if>
+        </where>
+    </select>
+    
+    <select id="selectBDriverByDriverId" parameterType="Long" resultMap="BDriverResult">
+        <include refid="selectBDriverVo"/>
+        where driver_id = #{driverId}
+    </select>
+        
+    <insert id="insertBDriver" parameterType="BDriver" useGeneratedKeys="true" keyProperty="driverId">
+        insert into b_driver
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="driverName != null">driver_name,</if>
+            <if test="identitiyNumber != null">identitiy_number,</if>
+            <if test="licenseNumber != null">license_number,</if>
+            <if test="driverPhone != null">driver_phone,</if>
+            <if test="drivingStatus != null">driving_status,</if>
+            <if test="onlineStatus != null">online_status,</if>
+            <if test="dirverCompany != null">dirver_company,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="driverName != null">#{driverName},</if>
+            <if test="identitiyNumber != null">#{identitiyNumber},</if>
+            <if test="licenseNumber != null">#{licenseNumber},</if>
+            <if test="driverPhone != null">#{driverPhone},</if>
+            <if test="drivingStatus != null">#{drivingStatus},</if>
+            <if test="onlineStatus != null">#{onlineStatus},</if>
+            <if test="dirverCompany != null">#{dirverCompany},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBDriver" parameterType="BDriver">
+        update b_driver
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="driverName != null">driver_name = #{driverName},</if>
+            <if test="identitiyNumber != null">identitiy_number = #{identitiyNumber},</if>
+            <if test="licenseNumber != null">license_number = #{licenseNumber},</if>
+            <if test="driverPhone != null">driver_phone = #{driverPhone},</if>
+            <if test="drivingStatus != null">driving_status = #{drivingStatus},</if>
+            <if test="onlineStatus != null">online_status = #{onlineStatus},</if>
+            <if test="dirverCompany != null">dirver_company = #{dirverCompany},</if>
+        </trim>
+        where driver_id = #{driverId}
+    </update>
+
+    <delete id="deleteBDriverByDriverId" parameterType="Long">
+        delete from b_driver where driver_id = #{driverId}
+    </delete>
+
+    <delete id="deleteBDriverByDriverIds" parameterType="String">
+        delete from b_driver where driver_id in 
+        <foreach item="driverId" collection="array" open="(" separator="," close=")">
+            #{driverId}
+        </foreach>
+    </delete>
+</mapper>

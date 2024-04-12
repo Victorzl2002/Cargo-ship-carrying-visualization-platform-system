@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.terminalmanage.mapper.BTerminalMapper">
+    
+    <resultMap type="BTerminal" id="BTerminalResult">
+        <result property="terminalId"    column="terminal_id"    />
+        <result property="terminalType"    column="terminal_type"    />
+        <result property="terminalStatus"    column="terminal_status"    />
+        <result property="terminalLoacation"    column="terminal_loacation"    />
+        <result property="installationDate"    column="installation_date"    />
+    </resultMap>
+
+    <sql id="selectBTerminalVo">
+        select terminal_id, terminal_type, terminal_status, terminal_loacation, installation_date from b_terminal
+    </sql>
+
+    <select id="selectBTerminalList" parameterType="BTerminal" resultMap="BTerminalResult">
+        <include refid="selectBTerminalVo"/>
+        <where>  
+            <if test="terminalType != null  and terminalType != ''"> and terminal_type = #{terminalType}</if>
+            <if test="terminalStatus != null  and terminalStatus != ''"> and terminal_status = #{terminalStatus}</if>
+            <if test="terminalLoacation != null  and terminalLoacation != ''"> and terminal_loacation = #{terminalLoacation}</if>
+            <if test="installationDate != null "> and installation_date = #{installationDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectBTerminalByTerminalId" parameterType="String" resultMap="BTerminalResult">
+        <include refid="selectBTerminalVo"/>
+        where terminal_id = #{terminalId}
+    </select>
+        
+    <insert id="insertBTerminal1" parameterType="BTerminal">
+        insert into b_terminal
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="terminalId != null">terminal_id,</if>
+            <if test="terminalType != null">terminal_type,</if>
+            <if test="terminalStatus != null">terminal_status,</if>
+            <if test="terminalLoacation != null">terminal_loacation,</if>
+            <if test="installationDate != null">installation_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="terminalId != null">#{terminalId},</if>
+            <if test="terminalType != null">#{terminalType},</if>
+            <if test="terminalStatus != null">#{terminalStatus},</if>
+            <if test="terminalLoacation != null">#{terminalLoacation},</if>
+            <if test="installationDate != null">#{installationDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBTerminal" parameterType="BTerminal">
+        update b_terminal
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="terminalType != null">terminal_type = #{terminalType},</if>
+            <if test="terminalStatus != null">terminal_status = #{terminalStatus},</if>
+            <if test="terminalLoacation != null">terminal_loacation = #{terminalLoacation},</if>
+            <if test="installationDate != null">installation_date = #{installationDate},</if>
+        </trim>
+        where terminal_id = #{terminalId}
+    </update>
+
+    <delete id="deleteBTerminalByTerminalId" parameterType="String">
+        delete from b_terminal where terminal_id = #{terminalId}
+    </delete>
+
+    <delete id="deleteBTerminalByTerminalIds" parameterType="String">
+        delete from b_terminal where terminal_id in 
+        <foreach item="terminalId" collection="array" open="(" separator="," close=")">
+            #{terminalId}
+        </foreach>
+    </delete>
+</mapper>

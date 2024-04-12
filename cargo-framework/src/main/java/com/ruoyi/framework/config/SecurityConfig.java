@@ -121,6 +121,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/order/order/wx/**").anonymous()
                 .antMatchers("/cargoinfo/cargoinfo/wx/**").anonymous()
                 .antMatchers("/feedbook/feedbook/wx/**").anonymous()
+                .antMatchers("/terminal/**").anonymous()
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated()
                 .and()

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.transplan.mapper.BTransplanMapper">
+    
+    <resultMap type="BTransplan" id="BTransplanResult">
+        <result property="planId"    column="plan_id"    />
+        <result property="cargoId"    column="cargo_id"    />
+        <result property="startLocation"    column="start_location"    />
+        <result property="endLocation"    column="end_location"    />
+        <result property="departureTime"    column="departure_time"    />
+        <result property="arrivalTime"    column="arrival_time"    />
+        <result property="driverId"    column="driver_id"    />
+        <result property="licensePlate"    column="license_plate"    />
+        <result property="transportationStatus"    column="transportation_status"    />
+    </resultMap>
+
+    <sql id="selectBTransplanVo">
+        select plan_id, cargo_id, start_location, end_location, departure_time, arrival_time, driver_id, license_plate, transportation_status from b_transplan
+    </sql>
+
+    <select id="selectBTransplanList" parameterType="BTransplan" resultMap="BTransplanResult">
+        <include refid="selectBTransplanVo"/>
+        <where>  
+            <if test="cargoId != null "> and cargo_id = #{cargoId}</if>
+            <if test="startLocation != null  and startLocation != ''"> and start_location = #{startLocation}</if>
+            <if test="endLocation != null  and endLocation != ''"> and end_location = #{endLocation}</if>
+            <if test="departureTime != null "> and departure_time = #{departureTime}</if>
+            <if test="arrivalTime != null "> and arrival_time = #{arrivalTime}</if>
+            <if test="driverId != null "> and driver_id = #{driverId}</if>
+            <if test="licensePlate != null  and licensePlate != ''"> and license_plate = #{licensePlate}</if>
+            <if test="transportationStatus != null  and transportationStatus != ''"> and transportation_status = #{transportationStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectBTransplanByPlanId" parameterType="Long" resultMap="BTransplanResult">
+        <include refid="selectBTransplanVo"/>
+        where plan_id = #{planId}
+    </select>
+        
+    <insert id="insertBTransplan" parameterType="BTransplan" useGeneratedKeys="true" keyProperty="planId">
+        insert into b_transplan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cargoId != null">cargo_id,</if>
+            <if test="startLocation != null">start_location,</if>
+            <if test="endLocation != null">end_location,</if>
+            <if test="departureTime != null">departure_time,</if>
+            <if test="arrivalTime != null">arrival_time,</if>
+            <if test="driverId != null">driver_id,</if>
+            <if test="licensePlate != null">license_plate,</if>
+            <if test="transportationStatus != null">transportation_status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cargoId != null">#{cargoId},</if>
+            <if test="startLocation != null">#{startLocation},</if>
+            <if test="endLocation != null">#{endLocation},</if>
+            <if test="departureTime != null">#{departureTime},</if>
+            <if test="arrivalTime != null">#{arrivalTime},</if>
+            <if test="driverId != null">#{driverId},</if>
+            <if test="licensePlate != null">#{licensePlate},</if>
+            <if test="transportationStatus != null">#{transportationStatus},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBTransplan" parameterType="BTransplan">
+        update b_transplan
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cargoId != null">cargo_id = #{cargoId},</if>
+            <if test="startLocation != null">start_location = #{startLocation},</if>
+            <if test="endLocation != null">end_location = #{endLocation},</if>
+            <if test="departureTime != null">departure_time = #{departureTime},</if>
+            <if test="arrivalTime != null">arrival_time = #{arrivalTime},</if>
+            <if test="driverId != null">driver_id = #{driverId},</if>
+            <if test="licensePlate != null">license_plate = #{licensePlate},</if>
+            <if test="transportationStatus != null">transportation_status = #{transportationStatus},</if>
+        </trim>
+        where plan_id = #{planId}
+    </update>
+
+    <delete id="deleteBTransplanByPlanId" parameterType="Long">
+        delete from b_transplan where plan_id = #{planId}
+    </delete>
+
+    <delete id="deleteBTransplanByPlanIds" parameterType="String">
+        delete from b_transplan where plan_id in 
+        <foreach item="planId" collection="array" open="(" separator="," close=")">
+            #{planId}
+        </foreach>
+    </delete>
+</mapper>

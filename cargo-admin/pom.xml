@@ -149,6 +149,22 @@
             <groupId>com.cargo</groupId>
             <artifactId>cargo-containerunloading</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.cargo</groupId>
+            <artifactId>cargo-terminal1</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.cargo</groupId>
+            <artifactId>cargo-driver</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.cargo</groupId>
+            <artifactId>cargo-transplan</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.cargo</groupId>
+            <artifactId>cargo-terminalmanage</artifactId>
+        </dependency>
 
     </dependencies>
 

@@ -102,6 +102,8 @@ public class WxUserServiceImpl implements IWxUserService
     public List parseWxUser(Code code) throws Exception {
         String appID="wx1ef81a311cac7214";
         String appSecret="ed49994ce0c10d42ec15a6b7c2f0cfae";
+//        String appID="wxdd26902288089992";
+//        String appSecret="c089eae00121918a3b80e7473939f2f4";
         RestTemplate restTemplate = new RestTemplate();
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid={appid}&secret={secret}&js_code={code}&grant_type=authorization_code";
         Map<String, String> params = new HashMap<>();

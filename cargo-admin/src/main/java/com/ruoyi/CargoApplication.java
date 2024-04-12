@@ -1,5 +1,6 @@
 package com.ruoyi;
 
+import com.ruoyi.web.controller.terminal1.TerminalController;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -16,6 +17,7 @@ public class CargoApplication
     {
         // System.setProperty("spring.devtools.restart.enabled", "false");
         SpringApplication.run(CargoApplication.class, args);
+        startTerminalController();
         System.out.println("                                  ___                                     ,--,    \n" +
                 "       ,---.  ,--,              ,--.'|_                                 ,--.'|    \n" +
                 "      /__./|,--.'|              |  | :,'   ,---.    __  ,-.       ,----,|  | :    \n" +
@@ -29,5 +31,9 @@ public class CargoApplication
                 "     :   \\ |;  :    ;|   :    : |  ,   /  `----'   ---'    ;   |  .'    |  ,   /  \n" +
                 "      '---\" |  ,   /  \\   \\  /   ---`-'                    `---'         ---`-'   \n" +
                 "             ---`-'    `----'                                                     \n");
+    }
+    private static void startTerminalController() {
+        TerminalController terminalController = new TerminalController();
+        terminalController.init();
     }
 }

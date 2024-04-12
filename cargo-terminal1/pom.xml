@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.cargo</groupId>
+        <artifactId>cargo</artifactId>
+        <version>3.8.6</version>
+
+    </parent>
+    <groupId>com.cargo</groupId>
+    <artifactId>cargo-terminal1</artifactId>
+    <name>cargo-terminal1</name>
+    <description>cargo-terminal1</description>
+    <dependencies>
+
+        <dependency>
+            <groupId>com.cargo</groupId>
+            <artifactId>cargo-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>6.0.13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+</project>
