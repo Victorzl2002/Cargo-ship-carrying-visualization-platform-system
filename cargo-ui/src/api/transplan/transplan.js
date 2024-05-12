@@ -1,3 +1,10 @@
+/*
+ * @Author: Victorzl
+ * @Date: 2024-04-07 13:43:58
+ * @LastEditors: Victorzl
+ * @LastEditTime: 2024-05-12 19:07:59
+ * @Description: 请填写简介
+ */
 import request from '@/utils/request'
 
 // 查询transplan列表
@@ -23,6 +30,14 @@ export function addTransplan(data) {
     url: '/transplan/transplan',
     method: 'post',
     data: data
+  })
+}
+
+// 任务分配
+export function allocateTransplan(planId) {
+  return request({
+    url: '/transplan/transplan/allocate/' + planId,
+    method: 'get',
   })
 }
 

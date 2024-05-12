@@ -33,13 +33,13 @@ public class BTransplan extends BaseEntity
     private String endLocation;
 
     /** 预计发车时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "预计发车时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @Excel(name = "预计发车时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm")
     private Date departureTime;
 
     /** 预计到达时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "预计到达时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @Excel(name = "预计到达时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm")
     private Date arrivalTime;
 
     /** 货车司机id */

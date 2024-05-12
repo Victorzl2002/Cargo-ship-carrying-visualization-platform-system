@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.envirinfo.mapper.BMorniteMapper">
+    
+    <resultMap type="BMornite" id="BMorniteResult">
+        <result property="morniteId"    column="mornite_id"    />
+        <result property="terminalId"    column="terminal_id"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="dimension"    column="dimension"    />
+        <result property="temperature"    column="temperature"    />
+        <result property="humidity"    column="humidity"    />
+        <result property="fumesStatus"    column="fumes_status"    />
+        <result property="morniteTime"    column="mornite_time"    />
+    </resultMap>
+
+    <sql id="selectBMorniteVo">
+        select mornite_id, terminal_id, longitude, dimension, temperature, humidity, fumes_status, mornite_time from b_mornite
+    </sql>
+
+    <select id="selectBMorniteList" parameterType="BMornite" resultMap="BMorniteResult">
+        <include refid="selectBMorniteVo"/>
+        <where>  
+            <if test="terminalId != null  and terminalId != ''"> and terminal_id = #{terminalId}</if>
+            <if test="longitude != null  and longitude != ''"> and longitude = #{longitude}</if>
+            <if test="dimension != null  and dimension != ''"> and dimension = #{dimension}</if>
+            <if test="temperature != null  and temperature != ''"> and temperature = #{temperature}</if>
+            <if test="humidity != null  and humidity != ''"> and humidity = #{humidity}</if>
+            <if test="fumesStatus != null  and fumesStatus != ''"> and fumes_status = #{fumesStatus}</if>
+            <if test="morniteTime != null "> and mornite_time = #{morniteTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectBMorniteByMorniteId" parameterType="Long" resultMap="BMorniteResult">
+        <include refid="selectBMorniteVo"/>
+        where mornite_id = #{morniteId}
+    </select>
+        
+    <insert id="insertBMornite" parameterType="BMornite" useGeneratedKeys="true" keyProperty="morniteId">
+        insert into b_mornite
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="terminalId != null">terminal_id,</if>
+            <if test="longitude != null">longitude,</if>
+            <if test="dimension != null">dimension,</if>
+            <if test="temperature != null">temperature,</if>
+            <if test="humidity != null">humidity,</if>
+            <if test="fumesStatus != null">fumes_status,</if>
+            <if test="morniteTime != null">mornite_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="terminalId != null">#{terminalId},</if>
+            <if test="longitude != null">#{longitude},</if>
+            <if test="dimension != null">#{dimension},</if>
+            <if test="temperature != null">#{temperature},</if>
+            <if test="humidity != null">#{humidity},</if>
+            <if test="fumesStatus != null">#{fumesStatus},</if>
+            <if test="morniteTime != null">#{morniteTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBMornite" parameterType="BMornite">
+        update b_mornite
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="terminalId != null">terminal_id = #{terminalId},</if>
+            <if test="longitude != null">longitude = #{longitude},</if>
+            <if test="dimension != null">dimension = #{dimension},</if>
+            <if test="temperature != null">temperature = #{temperature},</if>
+            <if test="humidity != null">humidity = #{humidity},</if>
+            <if test="fumesStatus != null">fumes_status = #{fumesStatus},</if>
+            <if test="morniteTime != null">mornite_time = #{morniteTime},</if>
+        </trim>
+        where mornite_id = #{morniteId}
+    </update>
+
+    <delete id="deleteBMorniteByMorniteId" parameterType="Long">
+        delete from b_mornite where mornite_id = #{morniteId}
+    </delete>
+
+    <delete id="deleteBMorniteByMorniteIds" parameterType="String">
+        delete from b_mornite where mornite_id in 
+        <foreach item="morniteId" collection="array" open="(" separator="," close=")">
+            #{morniteId}
+        </foreach>
+    </delete>
+</mapper>

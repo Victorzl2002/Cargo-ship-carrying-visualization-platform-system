@@ -1,7 +1,10 @@
 package com.ruoyi.web.controller.transplan;
 
+import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.mysql.cj.protocol.MessageSender;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +23,8 @@ import com.ruoyi.transplan.domain.BTransplan;
 import com.ruoyi.transplan.service.IBTransplanService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+
+import static com.ruoyi.common.core.domain.AjaxResult.success;
 
 /**
  * transplanController
@@ -45,6 +50,18 @@ public class BTransplanController extends BaseController
         List<BTransplan> list = bTransplanService.selectBTransplanList(bTransplan);
         return getDataTable(list);
     }
+
+    @GetMapping("/allocate/{planId}")
+    public AjaxResult allocatetrans(@PathVariable("planId") Long planId) throws IOException {
+        BTransplan bTransplan=new BTransplan();
+        bTransplan.setPlanId(planId);
+        List<BTransplan> list = bTransplanService.selectBTransplanList(bTransplan);
+        System.out.println(list);
+        String message = "Hello";
+        System.out.println(message);
+        return success();
+    }
+
 
     /**
      * 导出transplan列表

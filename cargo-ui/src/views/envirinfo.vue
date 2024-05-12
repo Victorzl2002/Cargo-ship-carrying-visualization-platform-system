@@ -1,8 +1,8 @@
 <!--
  * @Author: Victorzl
- * @Date: 2024-04-07 13:45:00
+ * @Date: 2024-05-11 21:25:10
  * @LastEditors: Victorzl
- * @LastEditTime: 2024-05-12 18:59:07
+ * @LastEditTime: 2024-05-12 16:52:51
  * @Description: 请填写简介
 -->
 <template>
@@ -15,49 +15,55 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="起始地点" prop="startLocation">
+      <el-form-item label="终端id" prop="terminalId">
         <el-input
-          v-model="queryParams.startLocation"
-          placeholder="请输入起始地点"
+          v-model="queryParams.terminalId"
+          placeholder="请输入终端id"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="目的地" prop="endLocation">
+      <el-form-item label="经度" prop="longitude">
         <el-input
-          v-model="queryParams.endLocation"
-          placeholder="请输入目的地"
+          v-model="queryParams.longitude"
+          placeholder="请输入经度"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="预计发车时间" prop="departureTime">
+      <el-form-item label="纬度" prop="dimension">
+        <el-input
+          v-model="queryParams.dimension"
+          placeholder="请输入纬度"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="温度" prop="temperature">
+        <el-input
+          v-model="queryParams.temperature"
+          placeholder="请输入温度"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="湿度" prop="humidity">
+        <el-input
+          v-model="queryParams.humidity"
+          placeholder="请输入湿度"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="监测时间" prop="morniteTime">
         <el-date-picker
           clearable
-          v-model="queryParams.departureTime"
-          type="datetime"
-          value-format="yyyy-MM-dd HH:mm"
-          placeholder="请选择预计发车时间"
+          v-model="queryParams.morniteTime"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="请选择监测时间"
         >
         </el-date-picker>
-      </el-form-item>
-      <el-form-item label="预计到达时间" prop="arrivalTime">
-        <el-date-picker
-          clearable
-          v-model="queryParams.arrivalTime"
-          type="datetime"
-          value-format="yyyy-MM-dd HH:mm"
-          placeholder="请选择预计到达时间"
-        >
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="货车车牌号" prop="licensePlate">
-        <el-input
-          v-model="queryParams.licensePlate"
-          placeholder="请输入货车车牌号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
       </el-form-item>
       <el-form-item>
         <el-button
@@ -81,18 +87,8 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['transplan:transplan:add']"
+          v-hasPermi="['envirinfo:mornite:add']"
           >新增</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type=""
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleallocate"
-          >任务分配</el-button
         >
       </el-col>
       <el-col :span="1.5">
@@ -103,7 +99,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['transplan:transplan:edit']"
+          v-hasPermi="['envirinfo:mornite:edit']"
           >修改</el-button
         >
       </el-col>
@@ -115,7 +111,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['transplan:transplan:remove']"
+          v-hasPermi="['envirinfo:mornite:remove']"
           >删除</el-button
         >
       </el-col>
@@ -126,7 +122,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['transplan:transplan:export']"
+          v-hasPermi="['envirinfo:mornite:export']"
           >导出</el-button
         >
       </el-col>
@@ -138,45 +134,29 @@
 
     <el-table
       v-loading="loading"
-      :data="transplanList"
+      :data="morniteList"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="运输计划id" align="center" prop="planId" />
-      <el-table-column label="运输货物id" align="center" prop="cargoId" />
-      <el-table-column label="起始地点" align="center" prop="startLocation" />
-      <el-table-column label="目的地" align="center" prop="endLocation" />
+      <el-table-column label="监测记录id" align="center" prop="morniteId" />
+      <el-table-column label="终端id" align="center" prop="terminalId" />
+      <el-table-column label="经度" align="center" prop="longitude" />
+      <el-table-column label="纬度" align="center" prop="dimension" />
+      <el-table-column label="温度" align="center" prop="temperature" />
+      <el-table-column label="湿度" align="center" prop="humidity" />
+      <el-table-column label="烟雾状态" align="center" prop="fumesStatus" />
       <el-table-column
-        label="预计发车时间"
+        label="监测时间"
         align="center"
-        prop="departureTime"
+        prop="morniteTime"
         width="180"
       >
         <template slot-scope="scope">
           <span>{{
-            parseTime(scope.row.departureTime, "{y}-{m}-{d} {hh}:{ii}")
+            parseTime(scope.row.morniteTime, "{y}-{m}-{d} {hh}:{ii}")
           }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="预计到达时间"
-        align="center"
-        prop="arrivalTime"
-        width="180"
-      >
-        <template slot-scope="scope">
-          <span>{{
-            parseTime(scope.row.arrivalTime, "{y}-{m}-{d} {hh}:{ii}")
-          }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="货车司机id" align="center" prop="driverId" />
-      <el-table-column label="货车车牌号" align="center" prop="licensePlate" />
-      <el-table-column
-        label="运输状态"
-        align="center"
-        prop="transportationStatus"
-      />
       <el-table-column
         label="操作"
         align="center"
@@ -188,7 +168,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['transplan:transplan:edit']"
+            v-hasPermi="['envirinfo:mornite:edit']"
             >修改</el-button
           >
           <el-button
@@ -196,7 +176,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['transplan:transplan:remove']"
+            v-hasPermi="['envirinfo:mornite:remove']"
             >删除</el-button
           >
         </template>
@@ -211,46 +191,33 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改transplan对话框 -->
+    <!-- 添加或修改监测信息反馈对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="运输货物id" prop="cargoId">
-          <el-input v-model="form.cargoId" placeholder="请输入运输货物id" />
+        <el-form-item label="终端id" prop="terminalId">
+          <el-input v-model="form.terminalId" placeholder="请输入终端id" />
         </el-form-item>
-        <el-form-item label="起始地点" prop="startLocation">
-          <el-input v-model="form.startLocation" placeholder="请输入起始地点" />
+        <el-form-item label="经度" prop="longitude">
+          <el-input v-model="form.longitude" placeholder="请输入经度" />
         </el-form-item>
-        <el-form-item label="目的地" prop="endLocation">
-          <el-input v-model="form.endLocation" placeholder="请输入目的地" />
+        <el-form-item label="纬度" prop="dimension">
+          <el-input v-model="form.dimension" placeholder="请输入纬度" />
         </el-form-item>
-        <el-form-item label="预计发车时间" prop="departureTime">
+        <el-form-item label="温度" prop="temperature">
+          <el-input v-model="form.temperature" placeholder="请输入温度" />
+        </el-form-item>
+        <el-form-item label="湿度" prop="humidity">
+          <el-input v-model="form.humidity" placeholder="请输入湿度" />
+        </el-form-item>
+        <el-form-item label="监测时间" prop="morniteTime">
           <el-date-picker
             clearable
-            v-model="form.departureTime"
+            v-model="form.morniteTime"
             type="datetime"
             value-format="yyyy-MM-dd HH:mm"
-            placeholder="请选择预计发车时间"
+            placeholder="请选择监测时间"
           >
           </el-date-picker>
-        </el-form-item>
-        <el-form-item label="预计到达时间" prop="arrivalTime">
-          <el-date-picker
-            clearable
-            v-model="form.arrivalTime"
-            type="datetime"
-            value-format="yyyy-MM-dd HH:mm"
-            placeholder="请选择预计到达时间"
-          >
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="货车司机id" prop="driverId">
-          <el-input v-model="form.driverId" placeholder="请输入货车司机id" />
-        </el-form-item>
-        <el-form-item label="货车车牌号" prop="licensePlate">
-          <el-input
-            v-model="form.licensePlate"
-            placeholder="请输入货车车牌号"
-          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -262,11 +229,10 @@
 </template>
 
 <script>
-import { listTransplan, allocateTransplan, getTransplan, delTransplan, addTransplan, updateTransplan } from "@/api/transplan/transplan";
-import { log } from "three/examples/jsm/nodes/Nodes.js";
+import { listMornite, getMornite, delMornite, addMornite, updateMornite } from "@/api/envirinfo/mornite";
 
 export default {
-  name: "Transplan",
+  name: "Mornite",
   data() {
     return {
       // 遮罩层
@@ -281,8 +247,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // transplan表格数据
-      transplanList: [],
+      // 监测信息反馈表格数据
+      morniteList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -291,14 +257,13 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        cargoId: null,
-        startLocation: null,
-        endLocation: null,
-        departureTime: null,
-        arrivalTime: null,
-        driverId: null,
-        licensePlate: null,
-        transportationStatus: null
+        terminalId: null,
+        longitude: null,
+        dimension: null,
+        temperature: null,
+        humidity: null,
+        fumesStatus: null,
+        morniteTime: null
       },
       // 表单参数
       form: {},
@@ -311,11 +276,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询transplan列表 */
+    /** 查询监测信息反馈列表 */
     getList() {
       this.loading = true;
-      listTransplan(this.queryParams).then(response => {
-        this.transplanList = response.rows;
+      listMornite(this.queryParams).then(response => {
+        this.morniteList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -328,15 +293,14 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        planId: null,
-        cargoId: null,
-        startLocation: null,
-        endLocation: null,
-        departureTime: null,
-        arrivalTime: null,
-        driverId: null,
-        licensePlate: null,
-        transportationStatus: null
+        morniteId: null,
+        terminalId: null,
+        longitude: null,
+        dimension: null,
+        temperature: null,
+        humidity: null,
+        fumesStatus: null,
+        morniteTime: null
       };
       this.resetForm("form");
     },
@@ -352,7 +316,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.planId)
+      this.ids = selection.map(item => item.morniteId)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -360,38 +324,30 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加transplan";
-    },
-    handleallocate(row) {
-      this.reset();
-      const planId = row.planId || this.ids;
-      allocateTransplan(planId).then(res => {
-        console.log(res);
-      })
-      console.log(planId);
+      this.title = "添加监测信息反馈";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const planId = row.planId || this.ids
-      getTransplan(planId).then(response => {
+      const morniteId = row.morniteId || this.ids
+      getMornite(morniteId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改transplan";
+        this.title = "修改监测信息反馈";
       });
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.planId != null) {
-            updateTransplan(this.form).then(response => {
+          if (this.form.morniteId != null) {
+            updateMornite(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addTransplan(this.form).then(response => {
+            addMornite(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -402,9 +358,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const planIds = row.planId || this.ids;
-      this.$modal.confirm('是否确认删除transplan编号为"' + planIds + '"的数据项？').then(function () {
-        return delTransplan(planIds);
+      const morniteIds = row.morniteId || this.ids;
+      this.$modal.confirm('是否确认删除监测信息反馈编号为"' + morniteIds + '"的数据项？').then(function () {
+        return delMornite(morniteIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -412,9 +368,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('transplan/transplan/export', {
+      this.download('envirinfo/mornite/export', {
         ...this.queryParams
-      }, `transplan_${new Date().getTime()}.xlsx`)
+      }, `mornite_${new Date().getTime()}.xlsx`)
     }
   }
 };

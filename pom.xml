@@ -344,6 +344,13 @@
                 <version>3.8.6</version>
             </dependency>
 
+            <!-- 监测信息管理-->
+            <dependency>
+                <groupId>com.cargo</groupId>
+                <artifactId>cargo-mornite</artifactId>
+                <version>3.8.6</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -379,6 +386,7 @@
         <module>cargo-driver</module>
         <module>cargo-transplan</module>
         <module>cargo-terminalmanage</module>
+        <module>cargo-mornite</module>
     </modules>
     <packaging>pom</packaging>
 

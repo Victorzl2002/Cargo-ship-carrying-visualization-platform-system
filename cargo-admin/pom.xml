@@ -165,6 +165,10 @@
             <groupId>com.cargo</groupId>
             <artifactId>cargo-terminalmanage</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.cargo</groupId>
+            <artifactId>cargo-mornite</artifactId>
+        </dependency>
 
     </dependencies>
 

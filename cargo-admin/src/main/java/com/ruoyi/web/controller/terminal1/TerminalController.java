@@ -1,101 +1,63 @@
 package com.ruoyi.web.controller.terminal1;
-//package com.ruoyi.web.controller.terminal;
-//import com.ruoyi.common.core.controller.BaseController;
-//import com.ruoyi.terminal.domain.TerminalMessage;
-//import com.ruoyi.terminal.utils.TerminalMessageParser;
-//import org.springframework.boot.SpringApplication;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.GetMapping;
-//import org.springframework.web.bind.annotation.PostMapping;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RestController;
-//
-///**
-// * @BelongsProject: cargo_porject
-// * @BelongsPackage: com.ruoyi.web.controller.terminal
-// * @Author: VictorZl
-// * @CreateTime: 2024-03-31  10:04
-// * @Description: TODO
-// * @Version: 1.0
-// */
-//@RestController
-//@RequestMapping("/terminal")
-//public class TerminalController extends BaseController {
-//    private TerminalMessageParser parser = new TerminalMessageParser();
-//
-//    @GetMapping("/receive")
-//    public ResponseEntity<String> receiveMessage(String message) {
-//        TerminalMessage terminalMessage = parser.parseMessage(message);
-//        System.out.println(terminalMessage);
-//        if (terminalMessage == null) {
-//            return ResponseEntity.badRequest().body("Invalid message format");
-//        }
-//        // 根据命令类型执行相应操作
-//        switch (terminalMessage.getCommand()) {
-//            case "1":
-//                // 处理排班数据
-//                // 这里做相应处理逻辑
-//                return ResponseEntity.ok("Scheduling data will push");
-//            case "2":
-//                // 处理任务数据
-//                // 这里做相应处理逻辑
-//                return ResponseEntity.ok("Task data processed successfully");
-//            case "A":
-//                // 处理确认收到
-//                // 这里做相应处理逻辑
-//                return ResponseEntity.ok("Acknowledgement received");
-//            case "B":
-//                // 正在途中
-//                // 这里做相应处理逻辑
-//                return ResponseEntity.ok("Acknowledgement received");
-//            case "C":
-//                // 已到达
-//                // 这里做相应处理逻辑
-//                return ResponseEntity.ok("Acknowledgement received");
-//            case "P":
-//                // 处理位置信息数据
-//                // 这里做相应处理逻辑
-//                return ResponseEntity.ok("Location data processed successfully");
-//            case "E":
-//                // 处理温度、湿度、报警状态数据
-//                // 这里做相应处理逻辑
-//                return ResponseEntity.ok("Temperature, humidity, and alarm status data processed successfully");
-//            // 其他命令类型的处理
-//            default:
-//                return ResponseEntity.badRequest().body("Invalid command");
-//        }
-//
-//    }
-//}
 
+import com.ruoyi.dangerinfo.domain.BDanger;
+import com.ruoyi.driver.domain.BDriver;
+import com.ruoyi.driver.service.IBDriverService;
+import com.ruoyi.envirinfo.domain.BMornite;
+import com.ruoyi.envirinfo.service.IBMorniteService;
+import com.ruoyi.terminal.domain.TerminalMessage;
+import com.ruoyi.terminal.utils.TerminalMessageParser;
+import com.ruoyi.terminalmanage.service.IBTerminalService;
+import com.ruoyi.transplan.domain.BTransplan;
+import com.ruoyi.transplan.service.IBTransplanService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import org.springframework.boot.SpringApplication;
 import javax.annotation.PostConstruct;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-//@SpringBootApplication
+import static com.ruoyi.common.core.domain.AjaxResult.success;
+
+@Component
 public class TerminalController {
+
+    @Autowired
+    IBMorniteService ibMorniteService;
+
+    @Autowired
+    IBTerminalService ibTerminalService;
+
+    @Autowired
+    IBTransplanService ibTransplanService;
+
+    @Autowired
+    private IBTransplanService bTransplanService;
+
+    @Autowired
+    private IBDriverService ibDriverService;
+
+    @Autowired
+    private MessageConverter messageConverter;
 
     private final int SERVER_PORT = 7000;
     private final ExecutorService threadPool = Executors.newCachedThreadPool();
+    private TerminalMessageParser parser = new TerminalMessageParser();
 
-    public static void main(String[] args) {
-        SpringApplication.run(TerminalController.class, args);
-    }
 
     @PostConstruct
     public void init() {
         startSocketServer();
     }
-
     private void startSocketServer() {
         threadPool.execute(() -> {
             try {
@@ -103,11 +65,9 @@ public class TerminalController {
                 System.out.println("ServerSocket bound to IP address: " + serverSocket.getInetAddress());
                 System.out.println("ServerSocket bound to port: " + serverSocket.getLocalPort());
                 System.out.println("Socket服务器已启动，监听端口：" + SERVER_PORT);
-
                 while (true) {
                     Socket clientSocket = serverSocket.accept();
                     System.out.println("客户端已连接：" + clientSocket.getInetAddress());
-
                     threadPool.execute(() -> {
                         try {
                             InputStream inputStream = clientSocket.getInputStream();
@@ -115,9 +75,11 @@ public class TerminalController {
                             int bytesRead;
                             while ((bytesRead = inputStream.read(buffer)) != -1) {
                                 String message = new String(buffer, 0, bytesRead);
-                                System.out.println("接收到客户端消息：" + message);
-                                System.out.println(1);
+                                TerminalMessage terminalMessage = parser.parseMessage(message);
+                                System.out.println(terminalMessage);
+                                handleTerminalMessage(clientSocket,terminalMessage);
                             }
+
                         } catch (IOException e) {
                             e.printStackTrace();
                         } finally {
@@ -133,5 +95,117 @@ public class TerminalController {
                 e.printStackTrace();
             }
         });
+    }
+    private void sendDataToClient(Socket clientSocket, String data) {
+        try {
+            OutputStream outputStream = clientSocket.getOutputStream();
+            outputStream.write(data.getBytes(StandardCharsets.UTF_8));
+            outputStream.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void handleTerminalMessage(Socket clientSocket, TerminalMessage terminalMessage) throws IOException {
+        if (terminalMessage == null) {
+            System.out.println("Invalid message format");
+            return;
+        }
+        switch (terminalMessage.getCommand()) {
+            case "1":
+                //发送数据到终端
+                BTransplan bTransplan10=new BTransplan();
+                String che=ibTerminalService.selectBTerminalByTerminalId(terminalMessage.getTerminalId()).getTerminalLoacation();
+                bTransplan10.setLicensePlate(che);
+                List<BTransplan> bTransplan11=ibTransplanService.selectBTransplanList(bTransplan10);
+                BTransplan[] bTransplan12 = new BTransplan[1]; // 声明为数组，包装变量
+                bTransplan12[0] = null; // 初始化为 null
+                bTransplan11.forEach(s->{
+                    if (s.getTransportationStatus().length()==0)
+                    {
+                        bTransplan12[0]=s;
+                    }
+                });
+                ;
+                String message=MessageConverter.convertToMessage(ibDriverService.selectBDriverByDriverId( bTransplan12[0].getDriverId()).getDriverName(),"运输","2小时");
+                sendDataToClient(clientSocket, message);
+                System.out.println("发送运输班次信息成功");
+                break;
+            case "A":
+            case "B":
+            case "C":
+                BTransplan bTransplan=new BTransplan();
+                String chepai=ibTerminalService.selectBTerminalByTerminalId(terminalMessage.getTerminalId()).getTerminalLoacation();
+                bTransplan.setLicensePlate(chepai);
+                BTransplan bTransplan1=ibTransplanService.selectBTransplanList(bTransplan).get(0);
+                if (terminalMessage.getCommand().equals("A"))
+                {
+                    bTransplan1.setTransportationStatus("确认收到");
+                }
+                if (terminalMessage.getCommand().equals("B"))
+                {
+                    bTransplan1.setTransportationStatus("正在途中");
+                }
+                if (terminalMessage.getCommand().equals("C"))
+                {
+                    bTransplan1.setTransportationStatus("已到达");
+                }
+                ibTransplanService.updateBTransplan(bTransplan1);
+                System.out.println("Acknowledgement received");
+                break;
+            case "P":
+                // 处理位置信息数据
+                // 这里做相应处理逻辑
+                BMornite bMornite=new BMornite();
+                bMornite.setTerminalId(terminalMessage.getTerminalId());
+                List<BMornite> bMornite1=ibMorniteService.selectBMorniteList(bMornite);
+                if (bMornite1==null)
+                {
+                    String[] strs=terminalMessage.getData().split(",");
+                    bMornite.setLongitude(strs[1]);
+                    bMornite.setDimension(strs[0]);
+                    bMornite.setMorniteTime(new Date());
+                    ibMorniteService.insertBMornite(bMornite);
+                }
+                else
+                {
+                    String[] strs=terminalMessage.getData().split(",");
+                    bMornite.setLongitude(strs[1]);
+                    bMornite.setDimension(strs[0]);
+                    bMornite.setMorniteTime(new Date());
+                    bMornite.setMorniteId(bMornite1.get(0).getMorniteId());
+                    ibMorniteService.updateBMornite(bMornite);
+                }
+                System.out.println("Location data processed successfully");
+                break;
+            case "E":
+                // 处理温度、湿度、报警状态数据
+                // 这里做相应处理逻辑
+                BMornite bMornite2= new BMornite();
+                bMornite2.setTerminalId(terminalMessage.getTerminalId());
+                List<BMornite> bMornite3=ibMorniteService.selectBMorniteList(bMornite2);
+                if (bMornite2==null)
+                {
+                    String[] strs=terminalMessage.getData().split(",");
+                    bMornite2.setTemperature(strs[0]);
+                    bMornite2.setHumidity(strs[1]);
+                    bMornite2.setFumesStatus(strs[2]);
+                    bMornite2.setMorniteTime(new Date());
+                    ibMorniteService.insertBMornite(bMornite2);
+                }
+                else
+                {
+                    String[] strs=terminalMessage.getData().split(",");
+                    bMornite2.setTemperature(strs[0]);
+                    bMornite2.setHumidity(strs[1]);
+                    bMornite2.setFumesStatus(strs[2]);
+                    bMornite2.setMorniteId(bMornite3.get(0).getMorniteId());
+                    bMornite2.setMorniteTime(new Date());
+                    ibMorniteService.updateBMornite(bMornite2);
+                }
+                System.out.println("Temperature, humidity, and alarm status data processed successfully");
+                break;
+            default:
+                System.out.println("Invalid command");
+        }
     }
 }
